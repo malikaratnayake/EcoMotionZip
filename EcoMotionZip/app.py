@@ -10,42 +10,60 @@ from queue import Empty, Queue
 from threading import Event, Thread
 from typing import Tuple, Union, Optional
 from itertools import product
+import argparse
 
 import cv2
 import numpy as np
 
 LOGGER = logging.getLogger(__name__)
-LOGGER.setLevel(logging.DEBUG)
+LOGGER.setLevel(logging.INFO)
 
 class Config:
     """Configuration class just to provide better parameter hints in code editor."""
     def __init__(
         self,
         video_source: str,
+        output_directory: str,
         reader_sleep_seconds: float,
         reader_flush_proportion: float,
         downscale_factor: int,
         dilate_kernel_size: int,
         movement_threshold: int,
         persist_frames: float,
+        full_frame_guarantee: int,
         video_codec: str,
         num_opencv_threads: int,
     ) -> None:
         self.video_source = video_source
+        self.output_directory = output_directory
         self.reader_sleep_seconds = reader_sleep_seconds
         self.reader_flush_proportion = reader_flush_proportion
         self.downscale_factor = downscale_factor
         self.dilate_kernel_size = dilate_kernel_size
         self.movement_threshold = movement_threshold
         self.persist_frames = persist_frames
+        self.full_frame_guarantee = full_frame_guarantee
         self.video_codec = video_codec
         self.num_opencv_threads = num_opencv_threads
 
 
+
+def get_directories():
+    parser = argparse.ArgumentParser(description="Process input and output directories.")
+    parser.add_argument('--video_source', type=str, help='Path to the input directory or a single video file. Set value to 0 to use webcam or any other integer to use a different camera.')
+    parser.add_argument('--output_directory', type=str, help='Path to the output directory')
+
+    args = parser.parse_args()
+
+    return vars(args)
+
 # Create Config object from JSON file
 with open("config.json", "r") as f:
     __config_dict = json.load(f)
-    CONFIG = Config(**__config_dict)
+
+cmd_args = get_directories()
+__config_dict.update((k, v) for k, v in cmd_args.items() if v is not None)
+CONFIG = Config(**__config_dict)
 
 
 class LoggingThread(Thread):
@@ -418,18 +436,14 @@ class Writer(LoggingThread):
         csv_filepath = output_dir / f"{self.output_filename}_video_info.csv"
         with open(csv_filepath, "w") as f:
             csv_writer = csv.writer(f)
+            csv_writer.writerow(["frame_number", "original_frame_number", "frame_with_full_frame"])
             for row in frame_info:
                 csv_writer.writerow(row)
 
 
 
 class MotionDetector(LoggingThread):
-    insect_detected = False
-    use_deep_learning = False
-    dl_attempt =0
     buffer_count = 0
-    max_buffer = 0 
-    dl_run_freq = 1 # Set this to 1 to run deep learning every frame (when prompted)
     def __init__(
         self,
         input_queue: Queue,
@@ -438,6 +452,7 @@ class MotionDetector(LoggingThread):
         dilate_kernel_size: int,
         movement_threshold: int,
         persist_frames: float,
+        full_frame_guarantee: int,
         stop_signal: Event,
         logger: logging.Logger,
     ) -> None:
@@ -446,11 +461,8 @@ class MotionDetector(LoggingThread):
         self.input_queue = input_queue
         self.writing_queue = writing_queue
         self.stop_signal = stop_signal
-
         self.prev_frame = None
         self.nframe = 0
-        self.full_frame = True
-        # self.prev_diff = None
 
 
         # For motion detection
@@ -460,6 +472,10 @@ class MotionDetector(LoggingThread):
         self.dilation_kernel = np.ones((downscaled_kernel_size, downscaled_kernel_size))
         self.movement_threshold = movement_threshold
         self.persist_frames = persist_frames
+        self.full_frame_guarantee  = full_frame_guarantee
+
+        if self.persist_frames > 0:
+            self.buffer_analysis = True
 
         if self.downscale_factor != 1:
             self.info(
@@ -483,207 +499,93 @@ class MotionDetector(LoggingThread):
             if frame is None:
                 break
 
-            # motion_detected_frame = self.detect_motion(frame=frame)
             self.detect_motion(frame=frame)
-
-
-            # self.writing_queue.put(motion_detected_frame)
 
         # Make sure motion writer knows to stop
         self.writing_queue.put(None)
 
-    def run_deep_learning(self, _frame, _mask, _conf = 0.01) -> bool:
-        # Find contours in the mask
-        contours, _ = cv2.findContours(image=_mask.astype(np.uint8), mode=cv2.RETR_EXTERNAL, method=cv2.CHAIN_APPROX_SIMPLE)
-
-        if contours:
-            x, y, w, h = cv2.boundingRect(max(contours, key=cv2.contourArea))
-            dl_frame = _frame[y:y + h, x:x + w]
-            dl_frame_size = dl_frame.shape[0:2]
-            # Round off values in dl_frame_size to nearest multiple of 32
-            dl_frame_size = tuple([32 * round(x / 32) for x in dl_frame_size])
-
-            results = model.predict(source=dl_frame, conf=_conf, imgsz = dl_frame_size ,show=False, verbose = False)
-
-            if results[0]:
-                return True
-            else:
-                return False
-        else:
-            return False
-
 
     def detect_motion(self, frame):
         self.nframe += 1
-        # print(self.nframe, "Motion")
-        # Downscale input frame
-        height, width, _ = frame.shape
-        frame = frame[:, int((width - height) / 2) - 400 : int((width + height) / 2) - 400, :]
+        put_to_queue = False
+        first_frame_in_seq = False
+
+        # Downscale input frame to improve performance
         orig_shape = frame.shape
         
         full_frame_recorded = False
-        # channels= cv2.split(frame)
 
-        if self.nframe <= 5:
-            # Crop the frame from left and right to make it square
-            # height, width, _ = frame.shape
-
-            # frame0 = frame[:, int((width - height) / 2) : int((width + height) / 2), :]
-
-            cv2.imwrite(f"out/full_frame-{self.nframe}.jpg", frame)
-
-
-
-        if (self.nframe % 300 == 0) or (self.nframe == 1):
+        if (self.nframe % self.full_frame_guarantee == 0) or (self.nframe == 1):
             self.record_full_frame = True
-
 
 
         if self.downscale_factor == 1:
             # Downscale factor of 1 really just means no downscaling at all
             downscaled_frame = frame
         else:
-            # downscaled_frame = cv2.cvtColor(cv2.resize(frame, dsize=None, fx=self.fx, fy=self.fy),  cv2.COLOR_BGR2GRAY) # what if gray scale and then resize
-            downscaled_frame0 = cv2.resize(frame, dsize=None, fx=self.fx, fy=self.fy)
-            downscaled_frame = cv2.cvtColor(downscaled_frame0,  cv2.COLOR_BGR2GRAY)
-
-        if self.nframe == 5:
-            cv2.imwrite("out/downscaled_frame.jpg", downscaled_frame)
-            cv2.imwrite("out/prev_frame.jpg", self.prev_frame)
-            cv2.imwrite("out/downscaled_frame0.jpg", downscaled_frame0)
+            downscaled_frame = cv2.cvtColor(cv2.resize(frame, dsize=None, fx=self.fx, fy=self.fy),  cv2.COLOR_BGR2GRAY) # what if gray scale and then resize
             
 
         if self.prev_frame is None:
             self.prev_frame = downscaled_frame
-        # if self.prev_diff is None:
-        #     self.prev_diff = np.zeros(self.prev_frame.shape, dtype=np.uint8)
 
-        # Compute pixel difference between consecutive frames (note this still has 3 channels)
-        # Note that previous frame was already downscaled!
+        # Compute pixel difference between consecutive frames 
         diff = cv2.absdiff(downscaled_frame, self.prev_frame)
-        # Add decayed version of previous diff to help temporarily stationary bees "persist"
-        # diff += (self.prev_diff * self.persist_frames).astype(np.uint8)
-
-        if self.nframe == 5:
-            cv2.imwrite("out/diff_frame.jpg", diff)
-        
-
-    
-
-
 
         # Convert to grayscale
-        # gray = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
         gray_frame = cv2.dilate(diff, kernel=self.dilation_kernel)
 
-        if self.nframe == 5:
-            cv2.imwrite("out/gray_frame.jpg", gray_frame)
 
-        # Cut off pixels that did not have "enough" movement. This is now a 2D array
-        # of just 1s and 0s
+        # Cut off pixels that did not have "enough" movement. This is now a 2D array of just 1s and 0s
         _, threshed_diff = cv2.threshold(src=gray_frame, thresh=self.movement_threshold, maxval=255, type=cv2.THRESH_BINARY)
 
-        if self.nframe == 5:
-            cv2.imwrite("out/threshed_diff.jpg", threshed_diff)
-
-
-        # Go to previous setting, set the movement threshold to a minimum valuyes
-
-        # Filter the blobs in threshed_diff based on a minimum size
-        # threshed_diff = threshed_diff.astype(np.uint8)
-
-        # mask = cv2.medianBlur(cv2.dilate(threshed_diff, kernel=self.dilation_kernel), 9)
-        mask0 = cv2.dilate(threshed_diff, kernel=self.dilation_kernel)
-        mask = cv2.medianBlur(mask0, 9)
-
-        if self.nframe == 5:
-            cv2.imwrite("out/mask.jpg", mask)
-            cv2.imwrite("out/dilate_thres.jpg", mask0)
+        mask = cv2.medianBlur(cv2.dilate(threshed_diff, kernel=self.dilation_kernel), 9)
 
 
         if self.prev_mask is None:
             self.prev_mask = mask.copy()
 
+
+        # Check if there are any nonzero pixels in the mask.
         if cv2.countNonZero(mask):
-            record_frame = True
+
+            if self.downscale_factor != 1:
+                mask = cv2.resize(mask, dsize=(orig_shape[1], orig_shape[0]))
 
             if not cv2.countNonZero(self.prev_mask):
                 first_frame_in_seq = True
-            else:
-                if self.insect_detected is True:
-                    first_frame_in_seq = False
-                else:
-                    first_frame_in_seq = True
 
-            self.prev_mask = mask.copy()
-            self.buffer_count = 0
-
-        else:
-            record_frame = False
-            first_frame_in_seq = False
-            if self.insect_detected is True and self.buffer_count > self.max_buffer:
-                self.insect_detected = False
-                self.prev_mask = mask.copy()
-            else:
-                mask = self.prev_mask.copy()
-
-            self.buffer_count += 1
-
-                
-
-        if self.downscale_factor != 1:
-            mask = cv2.resize(mask, dsize=(orig_shape[1], orig_shape[0]))
-
-        # Save downscaled frame for use in next iteration
-        self.prev_frame = downscaled_frame.copy()
-
-        
-        motion_frame = np.zeros(shape=frame.shape, dtype=np.uint8)
-
-        if record_frame is True:   
-            
-            if first_frame_in_seq is True:
-                if self.use_deep_learning is True and (self.dl_attempt % self.dl_run_freq == 0):
-                    self.insect_detected = self.run_deep_learning(_frame=frame, _mask=mask, _conf=0.05)
-                    if self.insect_detected is True:
-                        self.dl_attempt = 0
-                    else:
-                        self.dl_attempt += 1
-                elif self.use_deep_learning is True and (self.dl_attempt % self.dl_run_freq != 0):
-                    self.dl_attempt += 1
-                else:
-                    self.insect_detected = True
-                    self.dl_attempt = 0
-
-                if self.record_full_frame is True and self.insect_detected is True:
-                    # Copy the frame to motion_frame using opencv
+                if self.record_full_frame is True:
                     motion_frame = frame.copy()
-
-                    # motion_frame = frame
                     self.record_full_frame = False
                     full_frame_recorded = True
                 else:
-                    # motion_frame[mask] = frame[mask]
                     motion_frame = cv2.bitwise_and(frame, frame, mask=mask)
 
-            elif self.insect_detected is True:
+            else:
                 motion_frame = cv2.bitwise_and(frame, frame, mask=mask)
+            
+            
+            self.prev_mask = mask.copy()
+            self.buffer_count = 0
+            put_to_queue = True
+
+        elif self.buffer_analysis is True and cv2.countNonZero(self.prev_mask):
+            if self.buffer_count < self.persist_frames:
+                self.buffer_count += 1
+                motion_frame = cv2.bitwise_and(frame, frame, mask=self.prev_mask)
+                put_to_queue = True
 
             else:
-                self.insect_detected = False
-
-            put_to_queue = [motion_frame, self.nframe, first_frame_in_seq  ,full_frame_recorded]
-
-            if self.nframe == 5:
-                cv2.imwrite("out/motion_frame.jpg", motion_frame)
-                cv2.imwrite("out/resided_mask.jpg", mask)
-
-            self.writing_queue.put(put_to_queue)
+                self.prev_mask = mask.copy()
 
         else:
-            pass
+            self.prev_mask = mask.copy()
 
-        # return [motion_frame, record_frame ,full_frame_recorded]
+        if put_to_queue is True:
+            self.writing_queue.put([motion_frame, self.nframe, first_frame_in_seq  ,full_frame_recorded])
+
+        self.prev_frame = downscaled_frame.copy()
 
 
 def main(config: Config):
@@ -695,24 +597,21 @@ def main(config: Config):
     # Use the input filepath to figure out the output filepath
     output_filename = os.path.splitext(os.path.basename(config.video_source))[0]
 
+    output_parent_directory = Path(config.output_directory , "EcoMotionZip")
+    if not output_parent_directory.exists():
+        os.makedirs(output_parent_directory, exist_ok=True)
+
     # Create queues for transferring data between threads (or processes)
     reading_queue = Queue(maxsize=512)
-    # motion_input_queue = Queue(maxsize=900) # previously 512
     writing_queue = Queue(maxsize=256)
 
     stop_signal = Event()
 
-    # Figure out output filepath for this particular run
-    # output_directory = Path(f"out/{datetime.now()}")
-    output_directory = Path(f"out/{output_filename}")
+    output_directory = Path(f"{output_parent_directory}/{output_filename}")
+    # output_directory = Path(f"out/{output_filename}")
     if not output_directory.exists():
         output_directory.mkdir()
     output_filepath = str(output_directory / f"{output_filename}.avi")
-
-    # Copy config for record-keeping
-    with open(output_directory / f"{output_filename}_config.json", "w") as f:
-        # print(config.__dict__)
-        json.dump(config.__dict__, f)
 
     # Create some handlers for logging output to both console and file
     console_handler = logging.StreamHandler()
@@ -728,10 +627,10 @@ def main(config: Config):
     LOGGER.addHandler(console_handler)
     LOGGER.addHandler(file_handler)
 
+    # formatted_start_time  = start.strftime("%Y-%m-%d %H:%M:%S")
+    LOGGER.info(f"Starting processing at :  {datetime.fromtimestamp(start)}")
     LOGGER.info(f"Running main() with Config:  {config.__dict__}")
     LOGGER.info(f"Outputting to {output_filepath}")
-
-    # filename_ = os.path.splitext(os.path.basename(config.video_source))[0]
 
     # Create all of our threads
     threads = (
@@ -750,6 +649,7 @@ def main(config: Config):
             dilate_kernel_size=config.dilate_kernel_size,
             movement_threshold=config.movement_threshold,
             persist_frames=config.persist_frames,
+            full_frame_guarantee=config.full_frame_guarantee,
             stop_signal=stop_signal,
             logger=LOGGER,
         ),
@@ -801,10 +701,8 @@ def main(config: Config):
     # Add any extra stats/metadata to output too
     end = time.time()
     duration_seconds = end - start
-    stats = {"duration_seconds": round(duration_seconds, 2)}
-    with open(output_directory / "stats.json", "w") as f:
-        json.dump(stats, f)
-
+    # formatted_end_time = end.strftime("%Y-%m-%d %H:%M:%S")
+    LOGGER.info(f"Finished processing at :  {datetime.fromtimestamp(end)}")
     LOGGER.info(f"Finished main() in {duration_seconds:.2f} seconds.")
 
 
@@ -813,11 +711,11 @@ if __name__ == "__main__":
     dilate_kernel_size = CONFIG.dilate_kernel_size
     movement_threshold = CONFIG.movement_threshold
     persist_frames = CONFIG.persist_frames
+    full_frame_guarantee = CONFIG.full_frame_guarantee
     video_codec = CONFIG.video_codec
-
-    # Figure out if video is webcam index, single video file, or directory of
-    # video files
+    output_directory = CONFIG.output_directory
     video_source = CONFIG.video_source
+    
     if type(video_source) != int:
         video_source = Path(video_source)
         if video_source.is_dir():
@@ -836,8 +734,11 @@ if __name__ == "__main__":
         movement_threshold = [movement_threshold]
     if type(persist_frames) is not list:
         persist_frames = [persist_frames]
+    if type(full_frame_guarantee) is not list:
+        full_frame_guarantee = [full_frame_guarantee]
     if type(video_codec) is not list:
         video_codec = [video_codec]
+
 
     parameter_combos = product(
         video_source,
@@ -845,7 +746,7 @@ if __name__ == "__main__":
         dilate_kernel_size,
         movement_threshold,
         persist_frames,
-        video_codec,
+        full_frame_guarantee,
     )
     parameter_keys = [
         "video_source",
@@ -853,12 +754,13 @@ if __name__ == "__main__":
         "dilate_kernel_size",
         "movement_threshold",
         "persist_frames",
-        "video_codec",
+        "full_frame_guarantee",
     ]
     for combo in parameter_combos:
         this_config_dict = dict(zip(parameter_keys, combo))
         this_config_dict.update(
             {
+                "output_directory": output_directory,
                 "reader_sleep_seconds": CONFIG.reader_sleep_seconds,
                 "reader_flush_proportion": CONFIG.reader_flush_proportion,
                 "num_opencv_threads": CONFIG.num_opencv_threads,

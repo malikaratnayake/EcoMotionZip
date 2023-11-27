@@ -1,11 +1,13 @@
 {
     "video_source": "/Users/mrat0010/Documents/Edge_Processing/For_lex_code/video_1A.avi",
+    "output_directory": "",
     "reader_sleep_seconds": 1,
     "reader_flush_proportion": 0.9,
     "downscale_factor": 16,
     "dilate_kernel_size": 128,
     "movement_threshold": 40,
     "persist_frames": 0,
-    "video_codec": "X264",
+    "full_frame_guarantee": 300,
+    "video_codec": "XVID",
     "num_opencv_threads": 10
 }
