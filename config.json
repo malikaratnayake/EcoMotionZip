@@ -1,8 +1,9 @@
 {
-    "video_source": "/Users/mrat0010/Documents/Edge_Processing/For_lex_code/",
+    "video_source": "/Users/mrat0010/Documents/Edge_Processing/For_lex_code/video_1A.avi",
     "output_directory": "./output",
     "record_duration": 10,
     "number_of_videos": 2,
+    "delete_original": false,
     "reader_sleep_seconds": 1,
     "reader_flush_proportion": 0.9,
     "downscale_factor": 16,

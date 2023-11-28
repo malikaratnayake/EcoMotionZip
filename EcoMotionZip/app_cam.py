@@ -1,5 +1,3 @@
-"""Includes camera support"""
-
 from __future__ import annotations
 import os
 import csv
@@ -44,6 +42,7 @@ class Config:
         output_directory: str,
         record_duration: int,
         number_of_videos: int,
+        delete_original: bool,
         reader_sleep_seconds: float,
         reader_flush_proportion: float,
         downscale_factor: int,
@@ -58,6 +57,7 @@ class Config:
         self.output_directory = output_directory
         self.record_duration = record_duration
         self.number_of_videos = number_of_videos
+        self.delete_original = delete_original
         self.reader_sleep_seconds = reader_sleep_seconds
         self.reader_flush_proportion = reader_flush_proportion
         self.downscale_factor = downscale_factor
@@ -82,6 +82,7 @@ def read_args():
     parser.add_argument('--output_directory', type=str, help='Path to the output directory')
     parser.add_argument('--record_duration', type=int, help='Duration of the recording for a single video in seconds.')
     parser.add_argument('--number_of_videos', type=int, help='Number of videos to record.')
+    parser.add_argument('--delete_original', type=bool, help='Delete original video after processing.')
     parser.add_argument('--downscale_factor', type=int, help='Downscale factor for input video.')
     parser.add_argument('--dilate_kernel_size', type=int, help='Kernel size for dilation.')
     parser.add_argument('--movement_threshold', type=int, help='Threshold for movement detection.')
@@ -785,6 +786,11 @@ def main(config: Config):
     LOGGER.info(f"Finished processing at :  {datetime.fromtimestamp(end)}")
     LOGGER.info(f"Finished main() in {duration_seconds:.2f} seconds.")
 
+    if type(config.video_source) is str and config.delete_original is True:
+        os.remove(config.video_source)
+        LOGGER.info(f"Deleted original video file: {config.video_source}")
+    
+
 
 if __name__ == "__main__":
     downscale_factor = CONFIG.downscale_factor
@@ -843,6 +849,7 @@ if __name__ == "__main__":
                 "output_directory": CONFIG.output_directory,
                 "record_duration": CONFIG.record_duration,
                 "number_of_videos": CONFIG.number_of_videos,
+                "delete_original": CONFIG.delete_original,
                 "reader_sleep_seconds": CONFIG.reader_sleep_seconds,
                 "reader_flush_proportion": CONFIG.reader_flush_proportion,
                 "num_opencv_threads": CONFIG.num_opencv_threads,
