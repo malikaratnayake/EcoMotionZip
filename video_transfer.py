@@ -3,10 +3,10 @@ import subprocess
 import csv
 from datetime import datetime
 
-client_directory = "./testing/test_videos"
+client_directory = "./testing/EcoMotionZip_RPi5"
 server_directory = "/home/pi-server/EcoMotionZip/Originals"
 server_address = "10.42.0.1"
-csv_file = "transfer_times.csv"
+csv_file = "./testing/TT_processed_RPi5-server.csv"
 
 # Create the CSV file and write the header
 with open(csv_file, "w") as file:
