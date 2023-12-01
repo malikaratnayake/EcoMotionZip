@@ -11,7 +11,6 @@ from threading import Event, Thread
 from typing import Tuple, Union, Optional
 from itertools import product
 import argparse
-
 import cv2
 import numpy as np
 
