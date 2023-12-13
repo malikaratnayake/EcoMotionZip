@@ -42,6 +42,7 @@ class Config:
         record_duration: int,
         number_of_videos: int,
         delete_original: bool,
+        embed_timestamps: bool,
         camera_resolution: Tuple[int, int],
         camera_fps: int,
         raspberrypi_camera: bool,
@@ -63,6 +64,7 @@ class Config:
         self.camera_fps = camera_fps
         self.raspberrypi_camera = raspberrypi_camera
         self.delete_original = delete_original
+        self.embed_timestamps = embed_timestamps
         self.reader_sleep_seconds = reader_sleep_seconds
         self.reader_flush_proportion = reader_flush_proportion
         self.downscale_factor = downscale_factor
@@ -413,6 +415,7 @@ class Writer(LoggingThread):
         logger: logging.Logger,
         output_filename: str,
         video_codec: str,
+        embed_timestamps: bool,
     ) -> None:
         super().__init__(name="WriterThread", logger=logger)
 
@@ -422,6 +425,7 @@ class Writer(LoggingThread):
         self.fps = fps
         self.stop_signal = stop_signal
         self.output_filename = output_filename
+        self.embed_timestamps = embed_timestamps
 
         self.fourcc = cv2.VideoWriter_fourcc(*video_codec)
         self.flush_thresh = int(0.25 * writing_queue.maxsize)
@@ -442,6 +446,7 @@ class Writer(LoggingThread):
         logger: logging.Logger,
         output_filename: str,
         video_codec: str,
+        embed_timestamps: bool,
     ) -> Writer:
         """Convenience method to generate a Writer from a Reader.
 
@@ -481,6 +486,7 @@ class Writer(LoggingThread):
             logger=logger,
             output_filename=output_filename,
             video_codec=video_codec,
+            embed_timestamps=embed_timestamps,
         )
         return writer
 
@@ -534,10 +540,24 @@ class Writer(LoggingThread):
                 else:
                     frame, nframe, first_in_seq ,ff_recorded = frame_combo
 
+                self.frame_count += 1
+
+                if self.embed_timestamps is True:
+                    raw_time = nframe / self.fps
+                    minutes, seconds = divmod(raw_time, 60)
+                    time_str = f"{int(minutes):02d}:{int(seconds):02d}"
+                    cv2.putText(
+                        frame,
+                        text=f"Frame: {self.frame_count}  |  Raw Frame: {nframe}  |  Time: {time_str}",
+                        org=(10, 30),
+                        fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                        fontScale=1,
+                        color=(0, 255, 0),
+                        thickness=2,
+                    )
+
 
                 vw.write(frame)
-                self.frame_count += 1
-                
 
                 if first_in_seq is True:
                     if ff_recorded is True:
@@ -645,7 +665,7 @@ class MotionDetector(LoggingThread):
 
         if self.downscale_factor == 1:
             # Downscale factor of 1 really just means no downscaling at all
-            downscaled_frame = frame
+            downscaled_frame = cv2.cvtColor(frame,  cv2.COLOR_BGR2GRAY)
         else:
             downscaled_frame = cv2.cvtColor(cv2.resize(frame, dsize=None, fx=self.fx, fy=self.fy),  cv2.COLOR_BGR2GRAY) # what if gray scale and then resize
             
@@ -807,6 +827,7 @@ def main(config: Config):
             logger=LOGGER,
             output_filename=output_filename,
             video_codec=config.video_codec,
+            embed_timestamps=config.embed_timestamps,
         ),
     )
 
@@ -865,11 +886,12 @@ if __name__ == "__main__":
     full_frame_guarantee = CONFIG.full_frame_guarantee
     video_codec = CONFIG.video_codec
     video_source = CONFIG.video_source
+    embed_timestamps = CONFIG.embed_timestamps
     
     if type(video_source) != int:
         video_source = Path(video_source)
         if video_source.is_dir():
-            video_source = [str(v) for v in video_source.iterdir() if v.suffix in ['.avi', '.mp4', '.h264']]
+            video_source = [str(v) for v in video_source.iterdir() if v.suffix in ['.avi', '.mp4', '.h264', '.MTS']]
         elif type(video_source) is not list:
             video_source = [str(video_source)]
     else:
@@ -922,6 +944,7 @@ if __name__ == "__main__":
                 "reader_flush_proportion": CONFIG.reader_flush_proportion,
                 "num_opencv_threads": CONFIG.num_opencv_threads,
                 "video_codec": CONFIG.video_codec,
+                "embed_timestamps": CONFIG.embed_timestamps,
             }
         )
         this_config = Config(**this_config_dict)
