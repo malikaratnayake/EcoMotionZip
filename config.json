@@ -1,6 +1,6 @@
 {
-    "video_source": "/Users/mrat0010/Documents/GitHub/EcoMotionZip/testing/test_videos/PICT",
-    "output_directory": "/Users/mrat0010/Documents/GitHub/EcoMotionZip/testing",
+    "video_source": "./testing/test_videos/Naqvi2022",
+    "output_directory": "./testing",
     "record_duration": 60,
     "number_of_videos": 1,
     "camera_resolution": [1920,1080],
