@@ -19,6 +19,7 @@ sudo apt update
 sudo apt upgrade
 ```
 
+
 **2. Install OpenCV**
 
 Install the latest version of OpenCV:
