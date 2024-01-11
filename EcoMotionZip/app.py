@@ -97,7 +97,7 @@ def read_args():
     parser.add_argument('--movement_threshold', type=int, help='Threshold for movement detection.')
     parser.add_argument('--persist_frames', type=float, help='Number of frames to persist for.')
     parser.add_argument('--full_frame_guarantee', type=int, help='Number of frames to persist for.')
-    parser.add_argument('--video_codec', type=str, choices=["XVID", "X264"], help='Video codec to use for output video.')
+    parser.add_argument('--video_codec', type=str, choices=["DIVX", "X264"], help='Video codec to use for output video.')
     parser.add_argument('--num_opencv_threads', type=int, help='Number of threads to use for OpenCV.')
 
     args = parser.parse_args()

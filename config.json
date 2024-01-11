@@ -1,5 +1,5 @@
 {
-    "video_source": "/Users/mrat0010/Documents/GitHub/EcoMotionZip/testing/test_videos/Ratnayake2023/cam_1_N_video_20210315_132804.h264.avi",
+    "video_source": "/Users/mrat0010/Documents/GitHub/EcoMotionZip/testing/test_videos/PICT",
     "output_directory": "/Users/mrat0010/Documents/GitHub/EcoMotionZip/testing",
     "record_duration": 60,
     "number_of_videos": 1,
