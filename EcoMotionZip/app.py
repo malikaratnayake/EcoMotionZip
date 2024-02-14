@@ -693,8 +693,17 @@ class MotionDetector(LoggingThread):
         # Check if there are any nonzero pixels in the mask.
         if cv2.countNonZero(mask):
 
+            
             if self.downscale_factor != 1:
                 mask = cv2.resize(mask, dsize=(orig_shape[1], orig_shape[0]))
+            
+            # # Create a new mask with black background
+            new_mask = np.zeros_like(frame)
+
+            # # Crate a new frame with 20% reduced transparency
+            new_frame = cv2.addWeighted(frame, 0.8, new_mask, 0.2, 0)
+
+
 
             if not cv2.countNonZero(self.prev_mask):
                 first_frame_in_seq = True
@@ -704,10 +713,17 @@ class MotionDetector(LoggingThread):
                     self.record_full_frame = False
                     full_frame_recorded = True
                 else:
-                    motion_frame = cv2.bitwise_and(frame, frame, mask=mask)
-
+                    # motion_frame = cv2.bitwise_and(frame, frame, mask=mask)
+                    motion_frame0 = cv2.bitwise_and(frame, frame, mask=mask)
+                    motion_frame = cv2.add(cv2.absdiff(motion_frame0, new_frame), motion_frame0)
+                    # Convert mask to 3-channel image and add to frame
+                    
+                    # motion_frame = cv2.add(frame, new_mask)
             else:
-                motion_frame = cv2.bitwise_and(frame, frame, mask=mask)
+                # motion_frame = cv2.bitwise_and(frame, frame, mask=mask)
+                motion_frame0 = cv2.bitwise_and(frame, frame, mask=mask)
+                motion_frame = cv2.add(cv2.absdiff(motion_frame0, new_frame), motion_frame0)
+                # pass
             
             
             self.prev_mask = mask.copy()
