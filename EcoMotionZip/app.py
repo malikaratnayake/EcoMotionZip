@@ -15,7 +15,7 @@ import cv2
 import numpy as np
 
 LOGGER = logging.getLogger(__name__)
-LOGGER.setLevel(logging.INFO)
+LOGGER.setLevel(logging.CRITICAL)
 
 class Config:
     """Configuration class to store parameters for video processing.
@@ -565,7 +565,11 @@ class Writer(LoggingThread):
                     else:
                         nff_number = None
 
-                    frame_info.append([self.frame_count, nframe, nff_number])
+                    if time_str is not None:
+                        frame_info.append([self.frame_count, nframe, nff_number, time_str])
+
+                    else:
+                        frame_info.append([self.frame_count, nframe, nff_number])
 
 
                 if self.frame_count % 50 == 0:
@@ -580,7 +584,7 @@ class Writer(LoggingThread):
         csv_filepath = output_dir / f"{self.output_filename}_video_info.csv"
         with open(csv_filepath, "w") as f:
             csv_writer = csv.writer(f)
-            csv_writer.writerow(["frame_number", "original_frame_number", "frame_with_full_frame"])
+            csv_writer.writerow(["frame_number", "original_frame_number", "frame_with_full_frame", "time_stamp_in_original_video"])
             for row in frame_info:
                 csv_writer.writerow(row)
 
