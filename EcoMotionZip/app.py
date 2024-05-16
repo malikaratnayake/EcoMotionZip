@@ -606,6 +606,7 @@ class MotionDetector(LoggingThread):
         self.writing_queue = writing_queue
         self.stop_signal = stop_signal
         self.prev_frame = None
+        self.prev_full_frame = None
         self.nframe = 0
 
 
@@ -627,7 +628,7 @@ class MotionDetector(LoggingThread):
             )
 
     def run(self) -> None:
-        self.prev_frame = None
+        # self.prev_frame = None
         self.prev_mask = None
         self.buffer_analysis = True
 
@@ -672,6 +673,7 @@ class MotionDetector(LoggingThread):
 
         if self.prev_frame is None:
             self.prev_frame = downscaled_frame
+            self.prev_full_frame = frame
 
         # Compute pixel difference between consecutive frames 
         diff = cv2.absdiff(downscaled_frame, self.prev_frame)
@@ -684,6 +686,7 @@ class MotionDetector(LoggingThread):
         _, threshed_diff = cv2.threshold(src=gray_frame, thresh=self.movement_threshold, maxval=255, type=cv2.THRESH_BINARY)
 
         mask = cv2.medianBlur(cv2.dilate(threshed_diff, kernel=self.dilation_kernel), 9)
+
 
 
         if self.prev_mask is None:
@@ -700,14 +703,20 @@ class MotionDetector(LoggingThread):
                 first_frame_in_seq = True
 
                 if self.record_full_frame is True:
-                    motion_frame = frame.copy()
+                    # motion_frame = frame.copy()
+                    # record the frame before motion to ensure full frame is recorded and later tracking
                     self.record_full_frame = False
                     full_frame_recorded = True
-                else:
-                    motion_frame = cv2.bitwise_and(frame, frame, mask=mask)
+                    self.writing_queue.put([self.prev_full_frame, self.nframe - 1, first_frame_in_seq  ,full_frame_recorded])
+                    first_frame_in_seq = False
+                    full_frame_recorded = False
+                    
+                # else:
+                    
+            motion_frame = cv2.bitwise_and(frame, frame, mask=mask)
 
-            else:
-                motion_frame = cv2.bitwise_and(frame, frame, mask=mask)
+            # else:
+            #     motion_frame = cv2.bitwise_and(frame, frame, mask=mask)
             
             
             self.prev_mask = mask.copy()
@@ -730,6 +739,7 @@ class MotionDetector(LoggingThread):
             self.writing_queue.put([motion_frame, self.nframe, first_frame_in_seq  ,full_frame_recorded])
 
         self.prev_frame = downscaled_frame.copy()
+        self.prev_full_frame = frame.copy()
 
 
 def main(config: Config):
