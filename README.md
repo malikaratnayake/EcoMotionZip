@@ -1,10 +1,8 @@
 
 # EcoMotionZip
 
-
- * EcoMotionZip is a software project that provides a set of packages for efficient and reliable data compression and decompression of motion capture data.
- * The EcoMotionZip software packages utilize advanced compression algorithms and techniques to reduce the storage space required for motion capture data while maintaining high fidelity and accuracy during decompression.
- * This software project aims to improve the efficiency and effectiveness of motion capture data storage and transmission in various applications in video camera trap based animal monitoring in resource constrained edge devices.
+* EcoMotionZip software is designed for efficient and reliable video data compression in resource-constrained camera traps.
+* EcoMotionZip analyzes motion data captured by video camera traps to retain video pixel segments with motion, enabling accurate animal behavioral analysis through both automated and manual methods.
  
 
 ## Installation and Dependencies
@@ -142,14 +140,20 @@ Video codec to use for output video.
 - `--num_opencv_threads NUM_OPENCV_THREADS`     
     Number of threads to use for OpenCV.
 
-
-
-
 ## License
 
 EcoMotionZip is licensed under the [MIT License](LICENSE).
 
 ## Contact
 
-If you have any questions, feel free to reach out to us at [email](mailto:example@example.com).
+If you have any questions, feel free to reach out to us at [email](mailto:malika.ratnayake@monash.edu).
+
+## References
+
+* [Bees-edge](https://github.com/byebrid/bees-edge) by [Lex Gallon](https://github.com/byebrid).
+* [Basic motion detection and tracking with Python and OpenCV](https://pyimagesearch.com/2015/05/25/basic-motion-detection-and-tracking-with-python-and-opencv/) by [pyimagesearch](https://pyimagesearch.com)
+* [Increasing webcam FPS with Python and OpenCV](https://pyimagesearch.com/2015/12/21/increasing-webcam-fps-with-python-and-opencv/) by [pyimagesearch](https://pyimagesearch.com)
+
+
+
 
