@@ -1,0 +1,37 @@
+[2024-02-14 15:36:35,242] [INFO    ] [MainThread    ] Starting processing at :  2024-02-14 15:36:35.238842
+[2024-02-14 15:36:35,243] [INFO    ] [MainThread    ] Running main() with Config:  {'video_source': '/Users/mrat0010/Documents/GitHub/EcoMotionZip/testing/test_videos/JamesCook/Raw/00020.MTS', 'output_directory': '/Users/mrat0010/Documents/GitHub/EcoMotionZip/testing/nest_monitoring/transparent', 'record_duration': 60, 'number_of_videos': 1, 'camera_resolution': [1920, 1080], 'camera_fps': 32, 'raspberrypi_camera': False, 'delete_original': False, 'embed_timestamps': True, 'reader_sleep_seconds': 1, 'reader_flush_proportion': 0.9, 'downscale_factor': 16, 'dilate_kernel_size': 128, 'movement_threshold': 40, 'persist_frames': 0, 'full_frame_guarantee': 300, 'video_codec': 'X264', 'num_opencv_threads': 10}
+[2024-02-14 15:36:35,243] [INFO    ] [MainThread    ] Outputting to Output directory not specified or unavailable. Outputting to video source directory  /Users/mrat0010/Documents/GitHub/EcoMotionZip/testing/test_videos/JamesCook/Raw/EcoMotionZip
+[2024-02-14 15:36:35,284] [INFO    ] [MainThread    ] Will sleep 1 seconds if reading queue fills up with 460 frames. This *should not happen* if you're using a live webcam, else the frames are being processed too slowly!
+[2024-02-14 15:36:35,284] [INFO    ] [MainThread    ] Dilation kernel downscaled by 16x from 128 to 8
+[2024-02-14 15:36:35,285] [INFO    ] [MainThread    ] Will flush buffer to output file every 64 frames
+[2024-02-14 15:36:35,285] [INFO    ] [MainThread    ] Starting ReaderThread
+[2024-02-14 15:36:35,285] [INFO    ] [MainThread    ] Starting MotionThread
+[2024-02-14 15:36:35,285] [INFO    ] [MainThread    ] Starting WriterThread
+[2024-02-14 15:36:39,223] [INFO    ] [WriterThread  ] Written 50 frames so far
+[2024-02-14 15:36:47,334] [INFO    ] [WriterThread  ] Written 100 frames so far
+[2024-02-14 15:36:48,721] [INFO    ] [WriterThread  ] Written 150 frames so far
+[2024-02-14 15:36:49,537] [INFO    ] [WriterThread  ] Written 200 frames so far
+[2024-02-14 15:36:50,192] [INFO    ] [WriterThread  ] Written 250 frames so far
+[2024-02-14 15:36:51,647] [INFO    ] [WriterThread  ] Written 300 frames so far
+[2024-02-14 15:36:59,559] [INFO    ] [WriterThread  ] Written 350 frames so far
+[2024-02-14 15:37:00,235] [INFO    ] [WriterThread  ] Written 400 frames so far
+[2024-02-14 15:37:01,032] [INFO    ] [WriterThread  ] Written 450 frames so far
+[2024-02-14 15:37:01,675] [INFO    ] [WriterThread  ] Written 500 frames so far
+[2024-02-14 15:37:03,008] [INFO    ] [WriterThread  ] Written 550 frames so far
+[2024-02-14 15:37:13,721] [INFO    ] [WriterThread  ] Written 600 frames so far
+[2024-02-14 15:37:20,553] [INFO    ] [WriterThread  ] Written 650 frames so far
+[2024-02-14 15:37:21,216] [INFO    ] [WriterThread  ] Written 700 frames so far
+[2024-02-14 15:37:23,085] [INFO    ] [WriterThread  ] Written 750 frames so far
+[2024-02-14 15:37:25,691] [INFO    ] [WriterThread  ] Written 800 frames so far
+[2024-02-14 15:37:27,548] [ERROR   ] [MainThread    ] Received KeyboardInterrupt or some kind of Exception. Setting interrupt event and breaking out of infinite loop...
+Traceback (most recent call last):
+  File "/Users/mrat0010/Documents/GitHub/EcoMotionZip/EcoMotionZip/app.py", line 858, in main
+    time.sleep(0.5)
+KeyboardInterrupt
+[2024-02-14 15:37:27,550] [WARNING ] [MainThread    ] You may have to wait a minute for all child processes to gracefully exit!
+[2024-02-14 15:37:27,550] [INFO    ] [MainThread    ] Joining ReaderThread
+[2024-02-14 15:37:27,551] [INFO    ] [ReaderThread  ] Received stop signal
+[2024-02-14 15:37:27,551] [INFO    ] [ReaderThread  ] Adding None to end of reading queue
+[2024-02-14 15:37:27,570] [INFO    ] [MainThread    ] Joining MotionThread
+[2024-02-14 15:37:27,571] [INFO    ] [MainThread    ] Joining WriterThread
+[2024-02-14 15:37:27,666] [INFO    ] [WriterThread  ] Written 850 frames so far

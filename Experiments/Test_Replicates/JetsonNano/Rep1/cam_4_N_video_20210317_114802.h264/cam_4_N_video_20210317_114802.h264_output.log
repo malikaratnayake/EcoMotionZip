@@ -1,0 +1,54 @@
+[2023-12-21 16:19:42,269] [INFO    ] [MainThread    ] Starting processing at :  2023-12-21 16:19:42.265965
+[2023-12-21 16:19:42,270] [INFO    ] [MainThread    ] Running main() with Config:  {'video_source': '/home/malika/EcoMotionZip/testing/test_videos/Ratnayake2023/cam_4_N_video_20210317_114802.h264.avi', 'output_directory': './testing/Rep1', 'record_duration': 60, 'number_of_videos': 1, 'camera_resolution': [1920, 1080], 'camera_fps': 32, 'raspberrypi_camera': False, 'delete_original': False, 'embed_timestamps': False, 'reader_sleep_seconds': 1, 'reader_flush_proportion': 0.9, 'downscale_factor': 16, 'dilate_kernel_size': 128, 'movement_threshold': 40, 'persist_frames': 0, 'full_frame_guarantee': 300, 'video_codec': 'DIVX', 'num_opencv_threads': 10}
+[2023-12-21 16:19:42,270] [INFO    ] [MainThread    ] Outputting to Outputting to testing/Rep1/EcoMotionZip
+[2023-12-21 16:19:42,303] [INFO    ] [MainThread    ] Will sleep 1 seconds if reading queue fills up with 115 frames. This *should not happen* if you're using a live webcam, else the frames are being processed too slowly!
+[2023-12-21 16:19:42,304] [INFO    ] [MainThread    ] Dilation kernel downscaled by 16x from 128 to 8
+[2023-12-21 16:19:42,304] [INFO    ] [MainThread    ] Will flush buffer to output file every 32 frames
+[2023-12-21 16:19:42,304] [INFO    ] [MainThread    ] Starting ReaderThread
+[2023-12-21 16:19:42,305] [INFO    ] [MainThread    ] Starting MotionThread
+[2023-12-21 16:19:42,307] [INFO    ] [MainThread    ] Starting WriterThread
+[2023-12-21 16:20:12,763] [INFO    ] [WriterThread  ] Written 50 frames so far
+[2023-12-21 16:20:18,940] [INFO    ] [WriterThread  ] Written 100 frames so far
+[2023-12-21 16:20:21,880] [INFO    ] [WriterThread  ] Written 150 frames so far
+[2023-12-21 16:21:00,398] [INFO    ] [WriterThread  ] Written 200 frames so far
+[2023-12-21 16:21:25,675] [INFO    ] [WriterThread  ] Written 250 frames so far
+[2023-12-21 16:22:03,508] [INFO    ] [WriterThread  ] Written 300 frames so far
+[2023-12-21 16:22:38,547] [INFO    ] [WriterThread  ] Written 350 frames so far
+[2023-12-21 16:23:10,198] [INFO    ] [WriterThread  ] Written 400 frames so far
+[2023-12-21 16:23:13,868] [INFO    ] [WriterThread  ] Written 450 frames so far
+[2023-12-21 16:23:32,381] [INFO    ] [WriterThread  ] Written 500 frames so far
+[2023-12-21 16:23:38,274] [INFO    ] [ReaderThread  ] Adding None to end of reading queue
+[2023-12-21 16:23:39,689] [INFO    ] [WriterThread  ] Written 550 frames so far
+[2023-12-21 16:23:39,750] [INFO    ] [MainThread    ] All child processes appear to have finished! Exiting infinite loop...
+[2023-12-21 16:23:39,754] [INFO    ] [MainThread    ] Joining ReaderThread
+[2023-12-21 16:23:39,756] [INFO    ] [MainThread    ] Joining MotionThread
+[2023-12-21 16:23:39,758] [INFO    ] [MainThread    ] Joining WriterThread
+[2023-12-21 16:23:39,759] [INFO    ] [MainThread    ] Finished processing at :  2023-12-21 16:23:39.759370
+[2023-12-21 16:23:39,760] [INFO    ] [MainThread    ] Finished main() in 237.49 seconds.
+[2023-12-22 09:04:59,945] [INFO    ] [MainThread    ] Starting processing at :  2023-12-22 09:04:59.940725
+[2023-12-22 09:04:59,948] [INFO    ] [MainThread    ] Running main() with Config:  {'video_source': '/home/malika/EcoMotionZip/testing/test_videos/Ratnayake2023/cam_4_N_video_20210317_114802.h264.avi', 'output_directory': './testing/Rep1', 'record_duration': 60, 'number_of_videos': 1, 'camera_resolution': [1920, 1080], 'camera_fps': 32, 'raspberrypi_camera': False, 'delete_original': False, 'embed_timestamps': False, 'reader_sleep_seconds': 1, 'reader_flush_proportion': 0.9, 'downscale_factor': 16, 'dilate_kernel_size': 128, 'movement_threshold': 40, 'persist_frames': 0, 'full_frame_guarantee': 300, 'video_codec': 'DIVX', 'num_opencv_threads': 10}
+[2023-12-22 09:04:59,948] [INFO    ] [MainThread    ] Outputting to Outputting to testing/Rep1/EcoMotionZip
+[2023-12-22 09:04:59,978] [INFO    ] [MainThread    ] Will sleep 1 seconds if reading queue fills up with 115 frames. This *should not happen* if you're using a live webcam, else the frames are being processed too slowly!
+[2023-12-22 09:04:59,979] [INFO    ] [MainThread    ] Dilation kernel downscaled by 16x from 128 to 8
+[2023-12-22 09:04:59,979] [INFO    ] [MainThread    ] Will flush buffer to output file every 32 frames
+[2023-12-22 09:04:59,980] [INFO    ] [MainThread    ] Starting ReaderThread
+[2023-12-22 09:04:59,980] [INFO    ] [MainThread    ] Starting MotionThread
+[2023-12-22 09:04:59,981] [INFO    ] [MainThread    ] Starting WriterThread
+[2023-12-22 09:05:30,078] [INFO    ] [WriterThread  ] Written 50 frames so far
+[2023-12-22 09:05:36,189] [INFO    ] [WriterThread  ] Written 100 frames so far
+[2023-12-22 09:05:39,113] [INFO    ] [WriterThread  ] Written 150 frames so far
+[2023-12-22 09:06:17,162] [INFO    ] [WriterThread  ] Written 200 frames so far
+[2023-12-22 09:06:42,018] [INFO    ] [WriterThread  ] Written 250 frames so far
+[2023-12-22 09:07:19,386] [INFO    ] [WriterThread  ] Written 300 frames so far
+[2023-12-22 09:07:53,972] [INFO    ] [WriterThread  ] Written 350 frames so far
+[2023-12-22 09:08:25,299] [INFO    ] [WriterThread  ] Written 400 frames so far
+[2023-12-22 09:08:28,531] [INFO    ] [WriterThread  ] Written 450 frames so far
+[2023-12-22 09:08:46,808] [INFO    ] [WriterThread  ] Written 500 frames so far
+[2023-12-22 09:08:52,588] [INFO    ] [ReaderThread  ] Adding None to end of reading queue
+[2023-12-22 09:08:53,991] [INFO    ] [WriterThread  ] Written 550 frames so far
+[2023-12-22 09:08:54,425] [INFO    ] [MainThread    ] All child processes appear to have finished! Exiting infinite loop...
+[2023-12-22 09:08:54,429] [INFO    ] [MainThread    ] Joining ReaderThread
+[2023-12-22 09:08:54,432] [INFO    ] [MainThread    ] Joining MotionThread
+[2023-12-22 09:08:54,433] [INFO    ] [MainThread    ] Joining WriterThread
+[2023-12-22 09:08:54,435] [INFO    ] [MainThread    ] Finished processing at :  2023-12-22 09:08:54.435166
+[2023-12-22 09:08:54,436] [INFO    ] [MainThread    ] Finished main() in 234.49 seconds.

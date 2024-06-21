@@ -1,0 +1,99 @@
+[2024-05-24 10:31:45,993] [INFO    ] [MainThread    ] Starting processing at :  2024-05-24 10:31:45.992933
+[2024-05-24 10:31:45,993] [INFO    ] [MainThread    ] Running main() with Config:  {'video_source': '/Users/mrat0010/Documents/GitHub/EcoMotionZip/testing/test_videos/Ratnayake2023/cam_8_N_video_20210310_133844.h264.avi', 'output_directory': '/Users/mrat0010/Documents/GitHub/EcoMotionZip/testing/test_video_output', 'record_duration': 60, 'number_of_videos': 1, 'camera_resolution': [1920, 1080], 'camera_fps': 32, 'raspberrypi_camera': False, 'delete_original': False, 'embed_timestamps': False, 'reader_sleep_seconds': 1, 'reader_flush_proportion': 0.9, 'downscale_factor': 16, 'dilate_kernel_size': 128, 'movement_threshold': 40, 'persist_frames': 0, 'full_frame_guarantee': 300, 'video_codec': 'DIVX', 'num_opencv_threads': 10}
+[2024-05-24 10:31:45,993] [INFO    ] [MainThread    ] Outputting to Outputting to /Users/mrat0010/Documents/GitHub/EcoMotionZip/testing/test_video_output/EcoMotionZip
+[2024-05-24 10:31:45,997] [INFO    ] [MainThread    ] Will sleep 1 seconds if reading queue fills up with 460 frames. This *should not happen* if you're using a live webcam, else the frames are being processed too slowly!
+[2024-05-24 10:31:45,997] [INFO    ] [MainThread    ] Dilation kernel downscaled by 16x from 128 to 8
+[2024-05-24 10:31:45,997] [INFO    ] [MainThread    ] Will flush buffer to output file every 64 frames
+[2024-05-24 10:31:45,997] [INFO    ] [MainThread    ] Starting ReaderThread
+[2024-05-24 10:31:45,997] [INFO    ] [MainThread    ] Starting MotionThread
+[2024-05-24 10:31:45,997] [INFO    ] [MainThread    ] Starting WriterThread
+[2024-05-24 10:31:47,999] [INFO    ] [WriterThread  ] Written 50 frames so far
+[2024-05-24 10:31:48,485] [INFO    ] [WriterThread  ] Written 100 frames so far
+[2024-05-24 10:31:49,387] [INFO    ] [WriterThread  ] Written 150 frames so far
+[2024-05-24 10:31:49,719] [INFO    ] [WriterThread  ] Written 200 frames so far
+[2024-05-24 10:31:50,270] [INFO    ] [WriterThread  ] Written 250 frames so far
+[2024-05-24 10:31:50,773] [INFO    ] [WriterThread  ] Written 300 frames so far
+[2024-05-24 10:31:51,336] [INFO    ] [WriterThread  ] Written 350 frames so far
+[2024-05-24 10:31:51,838] [INFO    ] [WriterThread  ] Written 400 frames so far
+[2024-05-24 10:31:52,246] [INFO    ] [WriterThread  ] Written 450 frames so far
+[2024-05-24 10:31:52,617] [INFO    ] [WriterThread  ] Written 500 frames so far
+[2024-05-24 10:31:53,324] [INFO    ] [WriterThread  ] Written 550 frames so far
+[2024-05-24 10:31:53,763] [INFO    ] [WriterThread  ] Written 600 frames so far
+[2024-05-24 10:31:54,126] [INFO    ] [WriterThread  ] Written 650 frames so far
+[2024-05-24 10:31:54,511] [INFO    ] [WriterThread  ] Written 700 frames so far
+[2024-05-24 10:31:54,936] [INFO    ] [WriterThread  ] Written 750 frames so far
+[2024-05-24 10:31:55,525] [INFO    ] [WriterThread  ] Written 800 frames so far
+[2024-05-24 10:31:55,940] [INFO    ] [WriterThread  ] Written 850 frames so far
+[2024-05-24 10:31:56,290] [INFO    ] [WriterThread  ] Written 900 frames so far
+[2024-05-24 10:31:56,678] [INFO    ] [WriterThread  ] Written 950 frames so far
+[2024-05-24 10:31:57,002] [INFO    ] [WriterThread  ] Written 1000 frames so far
+[2024-05-24 10:31:57,333] [INFO    ] [WriterThread  ] Written 1050 frames so far
+[2024-05-24 10:31:57,807] [INFO    ] [WriterThread  ] Written 1100 frames so far
+[2024-05-24 10:31:58,284] [INFO    ] [WriterThread  ] Written 1150 frames so far
+[2024-05-24 10:31:58,624] [INFO    ] [WriterThread  ] Written 1200 frames so far
+[2024-05-24 10:31:58,993] [INFO    ] [WriterThread  ] Written 1250 frames so far
+[2024-05-24 10:31:59,604] [INFO    ] [WriterThread  ] Written 1300 frames so far
+[2024-05-24 10:32:00,133] [INFO    ] [WriterThread  ] Written 1350 frames so far
+[2024-05-24 10:32:00,579] [INFO    ] [WriterThread  ] Written 1400 frames so far
+[2024-05-24 10:32:00,949] [INFO    ] [WriterThread  ] Written 1450 frames so far
+[2024-05-24 10:32:01,417] [INFO    ] [WriterThread  ] Written 1500 frames so far
+[2024-05-24 10:32:01,830] [INFO    ] [WriterThread  ] Written 1550 frames so far
+[2024-05-24 10:32:02,180] [INFO    ] [WriterThread  ] Written 1600 frames so far
+[2024-05-24 10:32:02,632] [INFO    ] [WriterThread  ] Written 1650 frames so far
+[2024-05-24 10:32:03,200] [INFO    ] [WriterThread  ] Written 1700 frames so far
+[2024-05-24 10:32:03,718] [INFO    ] [WriterThread  ] Written 1750 frames so far
+[2024-05-24 10:32:04,109] [INFO    ] [WriterThread  ] Written 1800 frames so far
+[2024-05-24 10:32:04,430] [INFO    ] [WriterThread  ] Written 1850 frames so far
+[2024-05-24 10:32:04,812] [INFO    ] [WriterThread  ] Written 1900 frames so far
+[2024-05-24 10:32:05,153] [INFO    ] [WriterThread  ] Written 1950 frames so far
+[2024-05-24 10:32:05,456] [INFO    ] [WriterThread  ] Written 2000 frames so far
+[2024-05-24 10:32:05,751] [INFO    ] [WriterThread  ] Written 2050 frames so far
+[2024-05-24 10:32:06,105] [INFO    ] [WriterThread  ] Written 2100 frames so far
+[2024-05-24 10:32:06,478] [INFO    ] [WriterThread  ] Written 2150 frames so far
+[2024-05-24 10:32:06,813] [INFO    ] [WriterThread  ] Written 2200 frames so far
+[2024-05-24 10:32:07,154] [INFO    ] [WriterThread  ] Written 2250 frames so far
+[2024-05-24 10:32:07,496] [INFO    ] [WriterThread  ] Written 2300 frames so far
+[2024-05-24 10:32:07,820] [INFO    ] [WriterThread  ] Written 2350 frames so far
+[2024-05-24 10:32:08,156] [INFO    ] [WriterThread  ] Written 2400 frames so far
+[2024-05-24 10:32:08,498] [INFO    ] [WriterThread  ] Written 2450 frames so far
+[2024-05-24 10:32:08,835] [INFO    ] [WriterThread  ] Written 2500 frames so far
+[2024-05-24 10:32:09,157] [INFO    ] [WriterThread  ] Written 2550 frames so far
+[2024-05-24 10:32:09,473] [INFO    ] [WriterThread  ] Written 2600 frames so far
+[2024-05-24 10:32:11,512] [INFO    ] [WriterThread  ] Written 2650 frames so far
+[2024-05-24 10:32:11,953] [INFO    ] [WriterThread  ] Written 2700 frames so far
+[2024-05-24 10:32:12,430] [INFO    ] [WriterThread  ] Written 2750 frames so far
+[2024-05-24 10:32:12,768] [INFO    ] [WriterThread  ] Written 2800 frames so far
+[2024-05-24 10:32:13,074] [INFO    ] [WriterThread  ] Written 2850 frames so far
+[2024-05-24 10:32:14,229] [INFO    ] [WriterThread  ] Written 2900 frames so far
+[2024-05-24 10:32:14,641] [INFO    ] [WriterThread  ] Written 2950 frames so far
+[2024-05-24 10:32:14,974] [INFO    ] [WriterThread  ] Written 3000 frames so far
+[2024-05-24 10:32:15,296] [INFO    ] [WriterThread  ] Written 3050 frames so far
+[2024-05-24 10:32:18,987] [INFO    ] [WriterThread  ] Written 3100 frames so far
+[2024-05-24 10:32:19,306] [INFO    ] [WriterThread  ] Written 3150 frames so far
+[2024-05-24 10:32:19,648] [INFO    ] [WriterThread  ] Written 3200 frames so far
+[2024-05-24 10:32:19,944] [INFO    ] [WriterThread  ] Written 3250 frames so far
+[2024-05-24 10:32:20,266] [INFO    ] [WriterThread  ] Written 3300 frames so far
+[2024-05-24 10:32:20,580] [INFO    ] [WriterThread  ] Written 3350 frames so far
+[2024-05-24 10:32:20,888] [INFO    ] [WriterThread  ] Written 3400 frames so far
+[2024-05-24 10:32:21,202] [INFO    ] [WriterThread  ] Written 3450 frames so far
+[2024-05-24 10:32:21,552] [INFO    ] [WriterThread  ] Written 3500 frames so far
+[2024-05-24 10:32:21,873] [INFO    ] [WriterThread  ] Written 3550 frames so far
+[2024-05-24 10:32:23,691] [INFO    ] [WriterThread  ] Written 3600 frames so far
+[2024-05-24 10:32:24,407] [INFO    ] [WriterThread  ] Written 3650 frames so far
+[2024-05-24 10:32:24,721] [INFO    ] [WriterThread  ] Written 3700 frames so far
+[2024-05-24 10:32:28,199] [INFO    ] [WriterThread  ] Written 3750 frames so far
+[2024-05-24 10:32:28,970] [INFO    ] [WriterThread  ] Written 3800 frames so far
+[2024-05-24 10:32:29,592] [INFO    ] [WriterThread  ] Written 3850 frames so far
+[2024-05-24 10:32:29,887] [INFO    ] [WriterThread  ] Written 3900 frames so far
+[2024-05-24 10:32:30,986] [INFO    ] [WriterThread  ] Written 3950 frames so far
+[2024-05-24 10:32:31,768] [INFO    ] [WriterThread  ] Written 4000 frames so far
+[2024-05-24 10:32:32,062] [INFO    ] [WriterThread  ] Written 4050 frames so far
+[2024-05-24 10:32:32,387] [INFO    ] [WriterThread  ] Written 4100 frames so far
+[2024-05-24 10:32:32,701] [INFO    ] [WriterThread  ] Written 4150 frames so far
+[2024-05-24 10:32:33,277] [INFO    ] [ReaderThread  ] Adding None to end of reading queue
+[2024-05-24 10:32:33,873] [INFO    ] [MainThread    ] All child processes appear to have finished! Exiting infinite loop...
+[2024-05-24 10:32:33,874] [INFO    ] [MainThread    ] Joining ReaderThread
+[2024-05-24 10:32:33,874] [INFO    ] [MainThread    ] Joining MotionThread
+[2024-05-24 10:32:33,874] [INFO    ] [MainThread    ] Joining WriterThread
+[2024-05-24 10:32:33,874] [INFO    ] [MainThread    ] Finished processing at :  2024-05-24 10:32:33.874870
+[2024-05-24 10:32:33,875] [INFO    ] [MainThread    ] Finished main() in 47.88 seconds.

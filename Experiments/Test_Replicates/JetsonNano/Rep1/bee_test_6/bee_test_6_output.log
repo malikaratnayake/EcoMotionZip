@@ -1,0 +1,54 @@
+[2023-12-21 15:17:34,812] [INFO    ] [MainThread    ] Starting processing at :  2023-12-21 15:17:34.808202
+[2023-12-21 15:17:34,813] [INFO    ] [MainThread    ] Running main() with Config:  {'video_source': '/home/malika/EcoMotionZip/testing/test_videos/Ratnayake2021/bee_test_6.mp4', 'output_directory': './testing/Rep1', 'record_duration': 60, 'number_of_videos': 1, 'camera_resolution': [1920, 1080], 'camera_fps': 32, 'raspberrypi_camera': False, 'delete_original': False, 'embed_timestamps': False, 'reader_sleep_seconds': 1, 'reader_flush_proportion': 0.9, 'downscale_factor': 16, 'dilate_kernel_size': 128, 'movement_threshold': 40, 'persist_frames': 0, 'full_frame_guarantee': 300, 'video_codec': 'DIVX', 'num_opencv_threads': 10}
+[2023-12-21 15:17:34,814] [INFO    ] [MainThread    ] Outputting to Outputting to testing/Rep1/EcoMotionZip
+[2023-12-21 15:17:34,981] [INFO    ] [MainThread    ] Will sleep 1 seconds if reading queue fills up with 115 frames. This *should not happen* if you're using a live webcam, else the frames are being processed too slowly!
+[2023-12-21 15:17:34,982] [INFO    ] [MainThread    ] Dilation kernel downscaled by 16x from 128 to 8
+[2023-12-21 15:17:34,982] [INFO    ] [MainThread    ] Will flush buffer to output file every 32 frames
+[2023-12-21 15:17:34,982] [INFO    ] [MainThread    ] Starting ReaderThread
+[2023-12-21 15:17:34,983] [INFO    ] [MainThread    ] Starting MotionThread
+[2023-12-21 15:17:34,984] [INFO    ] [MainThread    ] Starting WriterThread
+[2023-12-21 15:17:38,853] [INFO    ] [WriterThread  ] Written 50 frames so far
+[2023-12-21 15:17:41,414] [INFO    ] [WriterThread  ] Written 100 frames so far
+[2023-12-21 15:17:43,956] [INFO    ] [WriterThread  ] Written 150 frames so far
+[2023-12-21 15:17:47,513] [INFO    ] [WriterThread  ] Written 200 frames so far
+[2023-12-21 15:17:51,043] [INFO    ] [WriterThread  ] Written 250 frames so far
+[2023-12-21 15:17:53,584] [INFO    ] [WriterThread  ] Written 300 frames so far
+[2023-12-21 15:17:56,390] [INFO    ] [WriterThread  ] Written 350 frames so far
+[2023-12-21 15:17:58,963] [INFO    ] [WriterThread  ] Written 400 frames so far
+[2023-12-21 15:18:01,656] [INFO    ] [WriterThread  ] Written 450 frames so far
+[2023-12-21 15:18:04,971] [INFO    ] [WriterThread  ] Written 500 frames so far
+[2023-12-21 15:18:07,738] [INFO    ] [WriterThread  ] Written 550 frames so far
+[2023-12-21 15:18:10,291] [INFO    ] [WriterThread  ] Written 600 frames so far
+[2023-12-21 15:18:13,045] [INFO    ] [WriterThread  ] Written 650 frames so far
+[2023-12-21 15:18:15,642] [INFO    ] [WriterThread  ] Written 700 frames so far
+[2023-12-21 15:18:18,362] [INFO    ] [WriterThread  ] Written 750 frames so far
+[2023-12-21 15:18:21,131] [INFO    ] [WriterThread  ] Written 800 frames so far
+[2023-12-21 15:18:23,854] [INFO    ] [WriterThread  ] Written 850 frames so far
+[2023-12-21 15:18:26,642] [INFO    ] [WriterThread  ] Written 900 frames so far
+[2023-12-21 15:18:29,513] [INFO    ] [WriterThread  ] Written 950 frames so far
+[2023-12-21 15:18:32,436] [INFO    ] [WriterThread  ] Written 1000 frames so far
+[2023-12-21 15:18:35,639] [INFO    ] [WriterThread  ] Written 1050 frames so far
+[2023-12-21 15:18:38,405] [INFO    ] [WriterThread  ] Written 1100 frames so far
+[2023-12-21 15:18:41,481] [INFO    ] [WriterThread  ] Written 1150 frames so far
+[2023-12-21 15:18:44,420] [INFO    ] [WriterThread  ] Written 1200 frames so far
+[2023-12-21 15:18:47,197] [INFO    ] [WriterThread  ] Written 1250 frames so far
+[2023-12-21 15:18:49,734] [INFO    ] [WriterThread  ] Written 1300 frames so far
+[2023-12-21 15:18:52,272] [INFO    ] [WriterThread  ] Written 1350 frames so far
+[2023-12-21 15:18:54,892] [INFO    ] [WriterThread  ] Written 1400 frames so far
+[2023-12-21 15:18:57,607] [INFO    ] [WriterThread  ] Written 1450 frames so far
+[2023-12-21 15:19:00,392] [INFO    ] [WriterThread  ] Written 1500 frames so far
+[2023-12-21 15:19:03,041] [INFO    ] [WriterThread  ] Written 1550 frames so far
+[2023-12-21 15:19:05,802] [INFO    ] [WriterThread  ] Written 1600 frames so far
+[2023-12-21 15:19:08,489] [INFO    ] [WriterThread  ] Written 1650 frames so far
+[2023-12-21 15:19:11,205] [INFO    ] [WriterThread  ] Written 1700 frames so far
+[2023-12-21 15:19:14,009] [INFO    ] [WriterThread  ] Written 1750 frames so far
+[2023-12-21 15:19:16,682] [INFO    ] [WriterThread  ] Written 1800 frames so far
+[2023-12-21 15:19:18,902] [INFO    ] [ReaderThread  ] Adding None to end of reading queue
+[2023-12-21 15:19:19,241] [INFO    ] [WriterThread  ] Written 1850 frames so far
+[2023-12-21 15:19:21,702] [INFO    ] [WriterThread  ] Written 1900 frames so far
+[2023-12-21 15:19:24,171] [INFO    ] [MainThread    ] All child processes appear to have finished! Exiting infinite loop...
+[2023-12-21 15:19:24,173] [INFO    ] [MainThread    ] Joining ReaderThread
+[2023-12-21 15:19:24,176] [INFO    ] [MainThread    ] Joining MotionThread
+[2023-12-21 15:19:24,177] [INFO    ] [MainThread    ] Joining WriterThread
+[2023-12-21 15:19:24,179] [INFO    ] [MainThread    ] Finished processing at :  2023-12-21 15:19:24.178898
+[2023-12-21 15:19:24,180] [INFO    ] [MainThread    ] Finished main() in 109.37 seconds.

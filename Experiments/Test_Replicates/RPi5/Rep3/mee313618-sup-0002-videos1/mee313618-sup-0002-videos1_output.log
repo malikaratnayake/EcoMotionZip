@@ -1,0 +1,72 @@
+[2023-12-19 12:51:30,470] [INFO    ] [MainThread    ] Starting processing at :  2023-12-19 12:51:30.466415
+[2023-12-19 12:51:30,470] [INFO    ] [MainThread    ] Running main() with Config:  {'video_source': '/home/pi-cam7/EcoMotionZip/testing/test_videos/PICT/mee313618-sup-0002-videos1.mp4', 'output_directory': './testing/Rep3', 'record_duration': 60, 'number_of_videos': 1, 'camera_resolution': [1920, 1080], 'camera_fps': 32, 'raspberrypi_camera': False, 'delete_original': False, 'embed_timestamps': False, 'reader_sleep_seconds': 1, 'reader_flush_proportion': 0.9, 'downscale_factor': 16, 'dilate_kernel_size': 128, 'movement_threshold': 40, 'persist_frames': 0, 'full_frame_guarantee': 300, 'video_codec': 'X264', 'num_opencv_threads': 10}
+[2023-12-19 12:51:30,470] [INFO    ] [MainThread    ] Outputting to Outputting to testing/Rep3/EcoMotionZip
+[2023-12-19 12:51:30,490] [INFO    ] [MainThread    ] Will sleep 1 seconds if reading queue fills up with 460 frames. This *should not happen* if you're using a live webcam, else the frames are being processed too slowly!
+[2023-12-19 12:51:30,491] [INFO    ] [MainThread    ] Dilation kernel downscaled by 16x from 128 to 8
+[2023-12-19 12:51:30,491] [INFO    ] [MainThread    ] Will flush buffer to output file every 64 frames
+[2023-12-19 12:51:30,491] [INFO    ] [MainThread    ] Starting ReaderThread
+[2023-12-19 12:51:30,491] [INFO    ] [MainThread    ] Starting MotionThread
+[2023-12-19 12:51:30,492] [INFO    ] [MainThread    ] Starting WriterThread
+[2023-12-19 12:51:33,512] [INFO    ] [WriterThread  ] Written 50 frames so far
+[2023-12-19 12:51:35,594] [INFO    ] [WriterThread  ] Written 100 frames so far
+[2023-12-19 12:51:37,372] [INFO    ] [WriterThread  ] Written 150 frames so far
+[2023-12-19 12:51:39,367] [INFO    ] [WriterThread  ] Written 200 frames so far
+[2023-12-19 12:51:41,753] [INFO    ] [WriterThread  ] Written 250 frames so far
+[2023-12-19 12:51:44,350] [INFO    ] [WriterThread  ] Written 300 frames so far
+[2023-12-19 12:51:46,678] [INFO    ] [WriterThread  ] Written 350 frames so far
+[2023-12-19 12:51:48,723] [INFO    ] [WriterThread  ] Written 400 frames so far
+[2023-12-19 12:51:50,691] [INFO    ] [WriterThread  ] Written 450 frames so far
+[2023-12-19 12:51:52,630] [INFO    ] [WriterThread  ] Written 500 frames so far
+[2023-12-19 12:51:54,563] [INFO    ] [WriterThread  ] Written 550 frames so far
+[2023-12-19 12:51:56,622] [INFO    ] [WriterThread  ] Written 600 frames so far
+[2023-12-19 12:51:59,084] [INFO    ] [WriterThread  ] Written 650 frames so far
+[2023-12-19 12:52:00,946] [INFO    ] [ReaderThread  ] Adding None to end of reading queue
+[2023-12-19 12:52:01,102] [INFO    ] [WriterThread  ] Written 700 frames so far
+[2023-12-19 12:52:02,516] [INFO    ] [WriterThread  ] Written 750 frames so far
+[2023-12-19 12:52:03,684] [INFO    ] [WriterThread  ] Written 800 frames so far
+[2023-12-19 12:52:04,699] [INFO    ] [WriterThread  ] Written 850 frames so far
+[2023-12-19 12:52:05,762] [INFO    ] [WriterThread  ] Written 900 frames so far
+[2023-12-19 12:52:07,267] [INFO    ] [WriterThread  ] Written 950 frames so far
+[2023-12-19 12:52:09,385] [INFO    ] [WriterThread  ] Written 1000 frames so far
+[2023-12-19 12:52:12,574] [INFO    ] [MainThread    ] All child processes appear to have finished! Exiting infinite loop...
+[2023-12-19 12:52:12,574] [INFO    ] [MainThread    ] Joining ReaderThread
+[2023-12-19 12:52:12,575] [INFO    ] [MainThread    ] Joining MotionThread
+[2023-12-19 12:52:12,575] [INFO    ] [MainThread    ] Joining WriterThread
+[2023-12-19 12:52:12,576] [INFO    ] [MainThread    ] Finished processing at :  2023-12-19 12:52:12.576120
+[2023-12-19 12:52:12,576] [INFO    ] [MainThread    ] Finished main() in 42.11 seconds.
+[2023-12-20 17:18:08,075] [INFO    ] [MainThread    ] Starting processing at :  2023-12-20 17:18:08.071602
+[2023-12-20 17:18:08,076] [INFO    ] [MainThread    ] Running main() with Config:  {'video_source': '/home/pi-cam7/EcoMotionZip/testing/test_videos/PICT/mee313618-sup-0002-videos1.mp4', 'output_directory': './testing/Rep3', 'record_duration': 60, 'number_of_videos': 1, 'camera_resolution': [1920, 1080], 'camera_fps': 32, 'raspberrypi_camera': False, 'delete_original': False, 'embed_timestamps': False, 'reader_sleep_seconds': 1, 'reader_flush_proportion': 0.9, 'downscale_factor': 16, 'dilate_kernel_size': 128, 'movement_threshold': 40, 'persist_frames': 0, 'full_frame_guarantee': 300, 'video_codec': 'X264', 'num_opencv_threads': 10}
+[2023-12-20 17:18:08,076] [INFO    ] [MainThread    ] Outputting to Outputting to testing/Rep3/EcoMotionZip
+[2023-12-20 17:18:08,096] [INFO    ] [MainThread    ] Will sleep 1 seconds if reading queue fills up with 460 frames. This *should not happen* if you're using a live webcam, else the frames are being processed too slowly!
+[2023-12-20 17:18:08,096] [INFO    ] [MainThread    ] Dilation kernel downscaled by 16x from 128 to 8
+[2023-12-20 17:18:08,097] [INFO    ] [MainThread    ] Will flush buffer to output file every 64 frames
+[2023-12-20 17:18:08,097] [INFO    ] [MainThread    ] Starting ReaderThread
+[2023-12-20 17:18:08,097] [INFO    ] [MainThread    ] Starting MotionThread
+[2023-12-20 17:18:08,097] [INFO    ] [MainThread    ] Starting WriterThread
+[2023-12-20 17:18:11,067] [INFO    ] [WriterThread  ] Written 50 frames so far
+[2023-12-20 17:18:12,841] [INFO    ] [WriterThread  ] Written 100 frames so far
+[2023-12-20 17:18:14,687] [INFO    ] [WriterThread  ] Written 150 frames so far
+[2023-12-20 17:18:16,525] [INFO    ] [WriterThread  ] Written 200 frames so far
+[2023-12-20 17:18:18,767] [INFO    ] [WriterThread  ] Written 250 frames so far
+[2023-12-20 17:18:21,533] [INFO    ] [WriterThread  ] Written 300 frames so far
+[2023-12-20 17:18:23,876] [INFO    ] [WriterThread  ] Written 350 frames so far
+[2023-12-20 17:18:26,050] [INFO    ] [WriterThread  ] Written 400 frames so far
+[2023-12-20 17:18:28,163] [INFO    ] [WriterThread  ] Written 450 frames so far
+[2023-12-20 17:18:30,270] [INFO    ] [WriterThread  ] Written 500 frames so far
+[2023-12-20 17:18:32,152] [INFO    ] [WriterThread  ] Written 550 frames so far
+[2023-12-20 17:18:34,260] [INFO    ] [WriterThread  ] Written 600 frames so far
+[2023-12-20 17:18:36,608] [INFO    ] [WriterThread  ] Written 650 frames so far
+[2023-12-20 17:18:38,730] [INFO    ] [WriterThread  ] Written 700 frames so far
+[2023-12-20 17:18:38,893] [INFO    ] [ReaderThread  ] Adding None to end of reading queue
+[2023-12-20 17:18:40,241] [INFO    ] [WriterThread  ] Written 750 frames so far
+[2023-12-20 17:18:41,410] [INFO    ] [WriterThread  ] Written 800 frames so far
+[2023-12-20 17:18:42,438] [INFO    ] [WriterThread  ] Written 850 frames so far
+[2023-12-20 17:18:43,514] [INFO    ] [WriterThread  ] Written 900 frames so far
+[2023-12-20 17:18:45,062] [INFO    ] [WriterThread  ] Written 950 frames so far
+[2023-12-20 17:18:47,242] [INFO    ] [WriterThread  ] Written 1000 frames so far
+[2023-12-20 17:18:50,183] [INFO    ] [MainThread    ] All child processes appear to have finished! Exiting infinite loop...
+[2023-12-20 17:18:50,183] [INFO    ] [MainThread    ] Joining ReaderThread
+[2023-12-20 17:18:50,183] [INFO    ] [MainThread    ] Joining MotionThread
+[2023-12-20 17:18:50,183] [INFO    ] [MainThread    ] Joining WriterThread
+[2023-12-20 17:18:50,184] [INFO    ] [MainThread    ] Finished processing at :  2023-12-20 17:18:50.183981
+[2023-12-20 17:18:50,184] [INFO    ] [MainThread    ] Finished main() in 42.11 seconds.
