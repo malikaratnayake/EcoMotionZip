@@ -1,5 +1,5 @@
 {
-    "video_source": "/Users/mrat0010/Documents/GitHub/EcoMotionZip/testing/test_videos/JamesCook/Raw",
+    "video_source": "/Users/mrat0010/Documents/GitHub/EcoMotionZip/testing/JamesCook/Raw",
     "output_directory": "/Users/mrat0010/Documents/GitHub/EcoMotionZip/testing/nest_monitoring/transparent",
     "record_duration": 60,
     "number_of_videos": 1,

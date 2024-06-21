@@ -15,7 +15,7 @@ import cv2
 import numpy as np
 
 LOGGER = logging.getLogger(__name__)
-LOGGER.setLevel(logging.CRITICAL)
+LOGGER.setLevel(logging.INFO)
 
 class Config:
     """Configuration class to store parameters for video processing.
@@ -754,6 +754,7 @@ class MotionDetector(LoggingThread):
 
 def main(config: Config):
     start = time.time()
+    interlaced = True
 
     # Make sure opencv doesn't use too many threads and hog CPUs
     cv2.setNumThreads(config.num_opencv_threads)
@@ -761,6 +762,13 @@ def main(config: Config):
     # Use the input filepath to figure out the output filename
     if type(config.video_source) is str:
         output_filename = os.path.splitext(os.path.basename(config.video_source))[0]
+        if interlaced is True:
+            LOGGER.info("Deinterlacing video...")
+            deinterlaced_output_filename = os.path.splitext(config.video_source)[0]+"_deinterlaced.avi"
+            os.system(f'ffmpeg -i "{config.video_source}" -vf yadif -c:v libx264 -preset slow -crf 19 -c:a aac -b:a 256k "{deinterlaced_output_filename}"')
+            LOGGER.info(f"Deinterlaced video saved to {deinterlaced_output_filename}")
+            config.video_source = deinterlaced_output_filename
+
     else:
         output_filename = datetime.now().strftime("%Y%m%d_%H%M%S")
 
