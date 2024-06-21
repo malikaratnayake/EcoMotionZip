@@ -2,10 +2,10 @@
 output
 out
 testing
-EnergyTests
 Expeirments/Other
 Expeirments/Test_Video_Dataset
 *.avi
 *.mp4
 *.MTS
 *.DS_Store
+Experiments/EnergyTests/UM_Meter_Data
