@@ -9,3 +9,5 @@ Expeirments/Test_Video_Dataset
 *.MTS
 *.DS_Store
 Experiments/EnergyTests/UM_Meter_Data
+Experiments/EnergyTests/RPi_old
+Experiments/Test_Replicates/RPi5_old
