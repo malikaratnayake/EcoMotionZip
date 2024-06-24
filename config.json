@@ -1,13 +1,13 @@
 {
-    "video_source": "/Users/mrat0010/Documents/Costa_Data/Camera_52_20240606/Video_Recordings",
-    "output_directory": "/Users/mrat0010/Documents/Costa_Data/Compressed",
+    "video_source": "/home/pi-cam51/EcoMotionZip/Experiments/Test_Video_Dataset/vanderVoort2022",
+    "output_directory": "/home/pi-cam51/EcoMotionZip/Experiments/Results/Rep1",
     "record_duration": 60,
     "number_of_videos": 1,
     "camera_resolution": [1920,1080],
     "camera_fps": 32,
     "raspberrypi_camera": false,
     "delete_original": false,
-    "embed_timestamps": true,
+    "embed_timestamps": false,
     "reader_sleep_seconds": 1,
     "reader_flush_proportion": 0.9,
     "downscale_factor": 16,
@@ -15,6 +15,7 @@
     "movement_threshold": 40,
     "persist_frames": 0,
     "full_frame_guarantee": 300,
-    "video_codec": "DIVX",
+    "video_codec": "X264",
+    "container_format": ".mp4",
     "num_opencv_threads": 10
 }

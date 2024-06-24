@@ -54,6 +54,7 @@ class Config:
         persist_frames: float,
         full_frame_guarantee: int,
         video_codec: str,
+        container_format: str,
         num_opencv_threads: int,
     ) -> None:
         self.video_source = video_source
@@ -73,6 +74,7 @@ class Config:
         self.persist_frames = persist_frames
         self.full_frame_guarantee = full_frame_guarantee
         self.video_codec = video_codec
+        self.container_format = container_format
         self.num_opencv_threads = num_opencv_threads
 
 
@@ -98,6 +100,7 @@ def read_args():
     parser.add_argument('--persist_frames', type=float, help='Number of frames to persist for.')
     parser.add_argument('--full_frame_guarantee', type=int, help='Number of frames to persist for.')
     parser.add_argument('--video_codec', type=str, choices=["DIVX", "X264"], help='Video codec to use for output video.')
+    parser.add_argument('--container_format', type=str, choices=[".avi", ".mp4"], help='Container format for output video.')
     parser.add_argument('--num_opencv_threads', type=int, help='Number of threads to use for OpenCV.')
 
     args = parser.parse_args()
@@ -783,7 +786,7 @@ def main(config: Config):
     # output_directory = Path(f"out/{output_filename}")
     if not output_directory.exists():
         output_directory.mkdir()
-    output_filepath = str(output_directory / f"{output_filename}.avi")
+    output_filepath = str(output_directory / f"{output_filename}{config.container_format}")
 
     # Create some handlers for logging output to both console and file
     console_handler = logging.StreamHandler()
@@ -896,6 +899,7 @@ if __name__ == "__main__":
     full_frame_guarantee = CONFIG.full_frame_guarantee
     video_codec = CONFIG.video_codec
     video_source = CONFIG.video_source
+    container_format = CONFIG.container_format
     embed_timestamps = CONFIG.embed_timestamps
     
     if type(video_source) != int:
@@ -954,6 +958,7 @@ if __name__ == "__main__":
                 "reader_flush_proportion": CONFIG.reader_flush_proportion,
                 "num_opencv_threads": CONFIG.num_opencv_threads,
                 "video_codec": CONFIG.video_codec,
+                "container_format": CONFIG.container_format,
                 "embed_timestamps": CONFIG.embed_timestamps,
             }
         )
