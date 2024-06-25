@@ -1,0 +1,50 @@
+[2024-06-24 14:56:03,490] [INFO    ] [MainThread    ] Starting processing at :  2024-06-24 14:56:03.487256
+[2024-06-24 14:56:03,490] [INFO    ] [MainThread    ] Running main() with Config:  {'video_source': '/home/pi-cam51/EcoMotionZip/Experiments/Test_Video_Dataset/Ratnayake2021/bee_test_5.mp4', 'output_directory': '/home/pi-cam51/EcoMotionZip/Experiments/Results/Rep2', 'record_duration': 60, 'number_of_videos': 1, 'camera_resolution': [1920, 1080], 'camera_fps': 32, 'raspberrypi_camera': False, 'delete_original': False, 'embed_timestamps': False, 'reader_sleep_seconds': 1, 'reader_flush_proportion': 0.9, 'downscale_factor': 16, 'dilate_kernel_size': 128, 'movement_threshold': 40, 'persist_frames': 0, 'full_frame_guarantee': 300, 'video_codec': 'X264', 'container_format': '.mp4', 'num_opencv_threads': 10}
+[2024-06-24 14:56:03,490] [INFO    ] [MainThread    ] Outputting to Outputting to /home/pi-cam51/EcoMotionZip/Experiments/Results/Rep2/EcoMotionZip
+[2024-06-24 14:56:03,564] [INFO    ] [MainThread    ] Will sleep 1 seconds if reading queue fills up with 460 frames. This *should not happen* if you're using a live webcam, else the frames are being processed too slowly!
+[2024-06-24 14:56:03,564] [INFO    ] [MainThread    ] Dilation kernel downscaled by 16x from 128 to 8
+[2024-06-24 14:56:03,564] [INFO    ] [MainThread    ] Will flush buffer to output file every 64 frames
+[2024-06-24 14:56:03,564] [INFO    ] [MainThread    ] Starting ReaderThread
+[2024-06-24 14:56:03,564] [INFO    ] [MainThread    ] Starting MotionThread
+[2024-06-24 14:56:03,565] [INFO    ] [MainThread    ] Starting WriterThread
+[2024-06-24 14:56:08,388] [INFO    ] [WriterThread  ] Written 50 frames so far
+[2024-06-24 14:56:11,362] [INFO    ] [WriterThread  ] Written 100 frames so far
+[2024-06-24 14:56:14,276] [INFO    ] [WriterThread  ] Written 150 frames so far
+[2024-06-24 14:56:17,204] [INFO    ] [WriterThread  ] Written 200 frames so far
+[2024-06-24 14:56:20,006] [INFO    ] [WriterThread  ] Written 250 frames so far
+[2024-06-24 14:56:22,760] [INFO    ] [WriterThread  ] Written 300 frames so far
+[2024-06-24 14:56:25,178] [INFO    ] [WriterThread  ] Written 350 frames so far
+[2024-06-24 14:56:27,665] [INFO    ] [WriterThread  ] Written 400 frames so far
+[2024-06-24 14:56:30,608] [INFO    ] [WriterThread  ] Written 450 frames so far
+[2024-06-24 14:56:33,070] [INFO    ] [WriterThread  ] Written 500 frames so far
+[2024-06-24 14:56:35,734] [INFO    ] [WriterThread  ] Written 550 frames so far
+[2024-06-24 14:56:38,624] [INFO    ] [WriterThread  ] Written 600 frames so far
+[2024-06-24 14:56:41,350] [INFO    ] [WriterThread  ] Written 650 frames so far
+[2024-06-24 14:56:44,196] [INFO    ] [WriterThread  ] Written 700 frames so far
+[2024-06-24 14:56:47,518] [INFO    ] [WriterThread  ] Written 750 frames so far
+[2024-06-24 14:56:49,978] [INFO    ] [WriterThread  ] Written 800 frames so far
+[2024-06-24 14:56:52,479] [INFO    ] [WriterThread  ] Written 850 frames so far
+[2024-06-24 14:56:55,199] [INFO    ] [WriterThread  ] Written 900 frames so far
+[2024-06-24 14:56:57,720] [INFO    ] [WriterThread  ] Written 950 frames so far
+[2024-06-24 14:57:00,110] [INFO    ] [WriterThread  ] Written 1000 frames so far
+[2024-06-24 14:57:02,781] [INFO    ] [WriterThread  ] Written 1050 frames so far
+[2024-06-24 14:57:05,106] [INFO    ] [WriterThread  ] Written 1100 frames so far
+[2024-06-24 14:57:07,600] [INFO    ] [WriterThread  ] Written 1150 frames so far
+[2024-06-24 14:57:10,193] [INFO    ] [WriterThread  ] Written 1200 frames so far
+[2024-06-24 14:57:12,515] [INFO    ] [WriterThread  ] Written 1250 frames so far
+[2024-06-24 14:57:14,566] [INFO    ] [WriterThread  ] Written 1300 frames so far
+[2024-06-24 14:57:17,428] [INFO    ] [WriterThread  ] Written 1350 frames so far
+[2024-06-24 14:57:20,297] [INFO    ] [WriterThread  ] Written 1400 frames so far
+[2024-06-24 14:57:22,262] [INFO    ] [WriterThread  ] Written 1450 frames so far
+[2024-06-24 14:57:28,985] [INFO    ] [WriterThread  ] Written 1500 frames so far
+[2024-06-24 14:57:32,435] [INFO    ] [WriterThread  ] Written 1550 frames so far
+[2024-06-24 14:57:35,462] [INFO    ] [WriterThread  ] Written 1600 frames so far
+[2024-06-24 14:57:37,566] [INFO    ] [WriterThread  ] Written 1650 frames so far
+[2024-06-24 14:57:38,374] [INFO    ] [ReaderThread  ] Adding None to end of reading queue
+[2024-06-24 14:57:39,598] [INFO    ] [WriterThread  ] Written 1700 frames so far
+[2024-06-24 14:57:41,319] [INFO    ] [MainThread    ] All child processes appear to have finished! Exiting infinite loop...
+[2024-06-24 14:57:41,319] [INFO    ] [MainThread    ] Joining ReaderThread
+[2024-06-24 14:57:41,319] [INFO    ] [MainThread    ] Joining MotionThread
+[2024-06-24 14:57:41,319] [INFO    ] [MainThread    ] Joining WriterThread
+[2024-06-24 14:57:41,319] [INFO    ] [MainThread    ] Finished processing at :  2024-06-24 14:57:41.319322
+[2024-06-24 14:57:41,319] [INFO    ] [MainThread    ] Finished main() in 97.83 seconds.
