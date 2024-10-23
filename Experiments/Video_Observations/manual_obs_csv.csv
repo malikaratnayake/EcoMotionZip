@@ -1,0 +1,48 @@
+﻿Video Name,IJCV_name,Insect,Entry Frame,Exit Frame,Recorded Frames,Information Retention,Raw Video,Compressed Video
+cam_4_N_video_20210309_132604.h264,T1,Syrphidae,10531,10931,400,Retained,1,1
+cam_4_N_video_20210309_132604.h264,T1,Syrphidae,11012,11048,36,New Insect,,0
+cam_4_N_video_20210309_132604.h264,T1,Syrphidae,11073,11119,46,Retained,0,0
+cam_4_N_video_20210309_132604.h264,T1,Honeybee,14723,17493,2770,Retained,10,10
+cam_4_N_video_20210317_120802.h264,T10,Syrphidae,16716,16950,234,Retained,1,1
+cam_8_N_video_20210310_133844.h264,T2,Honeybee,15858,17213,1355,Retained,7,7
+cam_7_S_video_20210310_142405.h264,T3,Lepidoptera,6351,6368,17,Retained,0,0
+cam_7_S_video_20210310_142405.h264,T3,Vespidae,6959,6969,10,Retained,0,0
+cam_7_S_video_20210310_142405.h264,T3,Honeybee,9917,15474,5557,Retained,11,11
+cam_3_N_video_20210317_142705.h264,T4,Honeybee,5903,6136,233,Retained,1,1
+cam_3_N_video_20210317_142705.h264,T4,Honeybee,6506,6532,26,Retained,0,0
+cam_3_N_video_20210317_142705.h264,T4,Honeybee,6831,7142,311,Retained,2,1
+cam_3_N_video_20210317_142705.h264,T4,Honeybee,7231,7585,354,Retained,2,2
+cam_3_N_video_20210317_142705.h264,T4,Honeybee,7597,7680,83,Retained,1,1
+cam_3_N_video_20210317_142705.h264,T4,Vespidae,10570,10599,29,Retained,0,0
+cam_3_N_video_20210317_142705.h264,T4,Honeybee,10733,10745,12,Retained,0,0
+cam_3_N_video_20210317_142705.h264,T4,Honeybee,11015,11963,948,Retained,7,8
+cam_1_S_video_20210317_123004.h264,T5,Honeybee,925,951,26,Retained,0,0
+cam_1_S_video_20210317_123004.h264,T5,Vespidae,8093,8098,5,New Insect,,0
+cam_1_S_video_20210317_123004.h264,T5,Vespidae,15369,15374,5,Retained,0,0
+cam_1_S_video_20210317_123004.h264,T5,Honeybee,17396,17989,593,Retained,2,2
+cam_2_S_video_20210308_112402.h264,T6,Vespidae,5295,5419,124,Retained,0,0
+cam_2_S_video_20210308_112402.h264,T6,Vespidae,5474,5560,86,Retained,0,0
+cam_2_S_video_20210308_112402.h264,T6,Vespidae,5647,5670,23,Retained,0,0
+cam_2_S_video_20210308_112402.h264,T6,Vespidae,5686,5761,75,Retained,0,0
+cam_2_S_video_20210308_112402.h264,T6,Vespidae,6152,6190,38,New Insect,,0
+cam_2_S_video_20210308_112402.h264,T6,Vespidae,6215,6226,11,New Insect,,0
+cam_2_S_video_20210308_112402.h264,T6,Vespidae,6244,6545,301,Retained,0,0
+cam_3_S_video_20210312_123203.h264,T7,Lepidoptera,8113,11036,2923,Retained,5,5
+cam_3_S_video_20210312_123203.h264,T7,Honeybee,12608,14210,1602,Retained,11,10
+cam_3_S_video_20210312_123203.h264,T7,Honeybee,15129,15587,458,Retained,2,2
+cam_3_S_video_20210312_123203.h264,T7,Honeybee,17015,17343,328,Retained,3,3
+cam_1_N_video_20210315_132804.h264,T8,Honeybee,3517,4115,598,Retained,2,2
+cam_1_N_video_20210315_132804.h264,T8,Honeybee,4649,5213,564,Retained,2,2
+cam_1_N_video_20210315_132804.h264,T8,Honeybee,5257,5850,593,Retained,1,1
+cam_1_N_video_20210315_132804.h264,T8,Honeybee,6201,6238,37,Retained,1,1
+cam_1_N_video_20210315_132804.h264,T8,Vespidae,8590,8595,5,Retained,0,0
+cam_1_N_video_20210315_132804.h264,T8,Lepidoptera,10432,10605,173,Retained,1,1
+cam_1_N_video_20210315_132804.h264,T8,Honeybee,15920,16283,363,Retained,2,3
+cam_1_N_video_20210315_132804.h264,T8,Vespidae,17878,17884,6,Retained,0,0
+cam_4_N_video_20210317_114802.h264,T9,Lepidoptera,5797,5848,51,Retained,0,0
+cam_4_N_video_20210317_114802.h264,T9,Lepidoptera,8192,8198,6,New Insect,,0
+cam_4_N_video_20210317_114802.h264,T9,Syrphidae,17377,17951,574,Retained,0,1
+cam_4_N_video_20210317_120802.h264,T10,Syrphidae,5349,7247,1898,Retained,2,2
+cam_4_N_video_20210317_120802.h264,T10,Syrphidae,11008,11059,51,New Insect,,0
+cam_4_N_video_20210317_120802.h264,T10,Syrphidae,15539,15863,324,Retained,1,1
+cam_4_N_video_20210317_120802.h264,T10,Syrphidae,16103,16431,328,New Insect,,0
