@@ -1,6 +1,6 @@
 {
-    "video_source": "/home/pi-cam51/EcoMotionZip/Experiments/Test_Video_Dataset/vanderVoort2022",
-    "output_directory": "/home/pi-cam51/EcoMotionZip/Experiments/Results/Rep1",
+    "video_source": "/Users/mrat0010/Documents/Blueberry-Costa/Camera_52_20240605/Video_recordings",
+    "output_directory": "/Users/mrat0010/Documents/Blueberry-Costa/Camera_52_20240605/Images",
     "record_duration": 60,
     "number_of_videos": 1,
     "camera_resolution": [1920,1080],

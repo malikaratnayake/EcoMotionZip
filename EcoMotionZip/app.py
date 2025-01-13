@@ -559,6 +559,12 @@ class Writer(LoggingThread):
                         thickness=2,
                     )
 
+                # Save the frame as an image
+                output_dir = Path(self.filepath).parent
+                image_filename = f"{self.output_filename}_frame_{self.frame_count}.jpg"
+                image_filepath = output_dir / image_filename
+                cv2.imwrite(str(image_filepath), frame)
+
 
                 vw.write(frame)
 
@@ -580,12 +586,12 @@ class Writer(LoggingThread):
         # Write CSV file with omitted frame indices. Note this is not the most
         # space-efficient way to store these, but it's probs good enough
         output_dir = Path(self.filepath).parent
-        csv_filepath = output_dir / f"{self.output_filename}_video_info.csv"
-        with open(csv_filepath, "w") as f:
-            csv_writer = csv.writer(f)
-            csv_writer.writerow(["frame_number", "original_frame_number", "frame_with_full_frame"])
-            for row in frame_info:
-                csv_writer.writerow(row)
+        # csv_filepath = output_dir / f"{self.output_filename}_video_info.csv"
+        # with open(csv_filepath, "w") as f:
+        #     csv_writer = csv.writer(f)
+        #     csv_writer.writerow(["frame_number", "original_frame_number", "frame_with_full_frame"])
+        #     for row in frame_info:
+        #         csv_writer.writerow(row)
 
 
 
@@ -739,7 +745,7 @@ class MotionDetector(LoggingThread):
             self.prev_mask = mask.copy()
 
         if put_to_queue is True:
-            self.writing_queue.put([motion_frame, self.nframe, first_frame_in_seq  ,full_frame_recorded])
+            self.writing_queue.put([frame, self.nframe, first_frame_in_seq  ,full_frame_recorded])
 
         self.prev_frame = downscaled_frame.copy()
         self.prev_full_frame = frame.copy()
