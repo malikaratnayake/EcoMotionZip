@@ -55,6 +55,7 @@ class Config:
         full_frame_capture_interval: int,
         video_codec: str,
         num_opencv_threads: int,
+        background_transparency: float
     ) -> None:
         self.video_source = video_source
         self.output_directory = output_directory
@@ -74,6 +75,7 @@ class Config:
         self.full_frame_capture_interval = full_frame_capture_interval
         self.video_codec = video_codec
         self.num_opencv_threads = num_opencv_threads
+        self.background_transparency = background_transparency
 
 
 
@@ -99,6 +101,7 @@ def read_args():
     parser.add_argument('--full_frame_capture_interval', type=int, help='Number of frames to persist for.')
     parser.add_argument('--video_codec', type=str, choices=["DIVX", "X264"], help='Video codec to use for output video.')
     parser.add_argument('--num_opencv_threads', type=int, help='Number of threads to use for OpenCV.')
+    parser.add_argument('--background_transparency', type=float, help='Background transparency.')
 
     args = parser.parse_args()
 
@@ -597,6 +600,7 @@ class MotionDetector(LoggingThread):
         movement_threshold: int,
         post_motion_record_frames: float,
         full_frame_capture_interval: int,
+        background_transparency: float,
         stop_signal: Event,
         logger: logging.Logger,
     ) -> None:
@@ -617,6 +621,11 @@ class MotionDetector(LoggingThread):
         self.movement_threshold = movement_threshold
         self.post_motion_record_frames = post_motion_record_frames
         self.full_frame_capture_interval  = full_frame_capture_interval
+        self.background_transparency = background_transparency
+        if self.background_transparency > 0:
+            self.transparent_background = True
+        else:
+            self.transparent_background = False
 
         if self.post_motion_record_frames > 0:
             self.buffer_analysis = True
@@ -695,6 +704,9 @@ class MotionDetector(LoggingThread):
 
             if self.downscale_factor != 1:
                 mask = cv2.resize(mask, dsize=(orig_shape[1], orig_shape[0]))
+                
+            if self.transparent_background is True:
+                transparent_frame = cv2.addWeighted(frame, (self.background_transparency), np.zeros_like(frame), (1-self.background_transparency), 0)
 
             if not cv2.countNonZero(self.prev_mask):
                 first_frame_in_seq = True
@@ -705,9 +717,13 @@ class MotionDetector(LoggingThread):
                     full_frame_recorded = True
                 else:
                     motion_frame = cv2.bitwise_and(frame, frame, mask=mask)
+                    if self.transparent_background is True:
+                        motion_frame = cv2.add(cv2.absdiff(motion_frame, transparent_frame), motion_frame)
 
             else:
                 motion_frame = cv2.bitwise_and(frame, frame, mask=mask)
+                if self.transparent_background is True:
+                    motion_frame = cv2.add(cv2.absdiff(motion_frame, transparent_frame), motion_frame)
             
             
             self.prev_mask = mask.copy()
@@ -773,7 +789,7 @@ def main(config: Config):
     # output_directory = Path(f"out/{output_filename}")
     if not output_directory.exists():
         output_directory.mkdir()
-    output_filepath = str(output_directory / f"{output_filename}.avi")
+    output_filepath = str(output_directory / f"{output_filename}.mp4")
 
     # Create some handlers for logging output to both console and file
     console_handler = logging.StreamHandler()
@@ -816,6 +832,7 @@ def main(config: Config):
             movement_threshold=config.movement_threshold,
             post_motion_record_frames=config.post_motion_record_frames,
             full_frame_capture_interval=config.full_frame_capture_interval,
+            background_transparency=config.background_transparency,
             stop_signal=stop_signal,
             logger=LOGGER,
         ),
@@ -945,6 +962,7 @@ if __name__ == "__main__":
                 "num_opencv_threads": CONFIG.num_opencv_threads,
                 "video_codec": CONFIG.video_codec,
                 "embed_timestamps": CONFIG.embed_timestamps,
+                "background_transparency": CONFIG.background_transparency,
             }
         )
         this_config = Config(**this_config_dict)
