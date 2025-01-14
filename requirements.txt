@@ -1,0 +1,4 @@
+numpy==2.2.1
+opencv_python==4.8.1.78
+opencv_python_headless==4.8.0.74
+# picamera2==0.3.24
