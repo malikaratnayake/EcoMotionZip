@@ -138,6 +138,7 @@ class ConfigEditorApp:
 
         text_widget.configure(state="disabled")  # Make the text read-only
 
+    
 
 
     def populate_fields(self):
@@ -152,7 +153,7 @@ class ConfigEditorApp:
             "camera_fps": "Camera FPS",
             "raspberrypi_camera": "Use Raspberry Pi Camera",
             "delete_original_after_processing": "Delete Original After Processing",
-            "embed_timestamps": "Embed Timestamps on Video",
+            "embed_timestamps": "Embed Timestamps",
             "reader_sleep_seconds": "Reader Sleep Duration (seconds)",
             "reader_flush_proportion": "Reader Flush Proportion",
             "downscale_factor": "Downscale Factor",
@@ -163,12 +164,15 @@ class ConfigEditorApp:
             "video_codec": "Video Codec",
             "num_opencv_threads": "Number of OpenCV Threads",
             "background_transparency": "Background Transparency",
+            "save_frames": "Save Individual Frames",
+            "frames_to_save": "Number of Frames to Save",
         }
 
         # Define sections and their corresponding keys
         sections = {
             "Directories": ["video_source", "output_directory"],
-            "Output Properties": ["delete_original_after_processing", "embed_timestamps", "video_codec", "background_transparency"],
+            "Output Configuration": ["delete_original_after_processing", "embed_timestamps", "video_codec", "background_transparency",
+                                        "save_frames", "frames_to_save"],
             "Camera Controls": ["raspberrypi_camera", "camera_resolution", "camera_fps", "record_duration", "number_of_videos"],
             "Advanced Controls": [
             "downscale_factor", "dilate_kernel_size", "movement_threshold",
@@ -255,6 +259,12 @@ class ConfigEditorApp:
 
                     ttk.Label(section_frame, text=label_text).grid(row=section_row, column=0, sticky="w", padx=5, pady=5)
 
+                    def on_save_frames_toggle():
+                        if self.entries["save_frames"].get():  # Check if save_frames is True
+                            self.entries["frames_to_save"].config(state="normal")
+                        else:
+                            self.entries["frames_to_save"].config(state="disabled")
+                    
                     if key in ["video_source", "output_directory"]:  # Directory chooser
                         def browse_directory(entry_widget):
                             selected_path = filedialog.askdirectory()
@@ -269,6 +279,20 @@ class ConfigEditorApp:
 
                         browse_button = ttk.Button(section_frame, text="Browse", command=lambda e=entry: browse_directory(e))
                         browse_button.grid(row=section_row, column=2, padx=5, pady=5)
+
+                    elif key == "save_frames":  # Checkbox for Save Individual Frames
+                        var = tk.BooleanVar(value=value)
+                        chk = ttk.Checkbutton(section_frame, variable=var, command=on_save_frames_toggle)
+                        chk.grid(row=section_row, column=1, sticky="w", padx=5, pady=5)
+                        self.entries[key] = var
+
+                    elif key == "frames_to_save":  # Spinbox for Number of Frames to Save
+                        spinbox = tk.Spinbox(section_frame, from_=0, to=1000, increment=1, width=10)
+                        spinbox.delete(0, "end")
+                        spinbox.insert(0, str(value))
+                        spinbox.grid(row=section_row, column=1, sticky="w", padx=5, pady=5)
+                        spinbox.config(state="normal" if self.entries["save_frames"].get() else "disabled")
+                        self.entries[key] = spinbox
                     
                     elif key == "background_transparency":
                         spinbox = tk.Spinbox(
@@ -365,6 +389,10 @@ class ConfigEditorApp:
 
     def run_compression(self):
         """Run the video processing script and display its output in real-time."""
+
+        # Save the configuration before running the script
+        self.save_config()
+
         def read_output(process, text_widget):
             """Read output from process and display it in the text widget."""
             for line in iter(process.stdout.readline, ""):
@@ -414,7 +442,7 @@ class ConfigEditorApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.geometry("700x570")
+    root.geometry("700x650")
     app = ConfigEditorApp(root)
 
     # Make the Tkinter window active and focused

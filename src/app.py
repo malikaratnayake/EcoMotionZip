@@ -55,7 +55,9 @@ class Config:
         full_frame_capture_interval: int,
         video_codec: str,
         num_opencv_threads: int,
-        background_transparency: float
+        background_transparency: float,
+        save_frames: bool,
+        frames_to_save: int
     ) -> None:
         self.video_source = video_source
         self.output_directory = output_directory
@@ -76,6 +78,8 @@ class Config:
         self.video_codec = video_codec
         self.num_opencv_threads = num_opencv_threads
         self.background_transparency = background_transparency
+        self.save_frames = save_frames
+        self.frames_to_save = frames_to_save
 
 
 
@@ -102,6 +106,8 @@ def read_args():
     parser.add_argument('--video_codec', type=str, choices=["DIVX", "X264"], help='Video codec to use for output video.')
     parser.add_argument('--num_opencv_threads', type=int, help='Number of threads to use for OpenCV.')
     parser.add_argument('--background_transparency', type=float, help='Background transparency.')
+    parser.add_argument('--save_frames', type=bool, help='Save frames.')
+    parser.add_argument('--frames_to_save', type=int, help='Number of frames to save.')
 
     args = parser.parse_args()
 
@@ -419,6 +425,8 @@ class Writer(LoggingThread):
         output_filename: str,
         video_codec: str,
         embed_timestamps: bool,
+        save_frames: bool,
+        frames_to_save: int
     ) -> None:
         super().__init__(name="WriterThread", logger=logger)
 
@@ -429,6 +437,12 @@ class Writer(LoggingThread):
         self.stop_signal = stop_signal
         self.output_filename = output_filename
         self.embed_timestamps = embed_timestamps
+        self.save_frames = save_frames
+        if self.save_frames is True:
+            self.frames_to_save = frames_to_save
+        else:
+            self.frames_to_save = 0
+
 
         self.fourcc = cv2.VideoWriter_fourcc(*video_codec)
         self.flush_thresh = int(0.25 * writing_queue.maxsize)
@@ -450,6 +464,8 @@ class Writer(LoggingThread):
         output_filename: str,
         video_codec: str,
         embed_timestamps: bool,
+        save_frames: bool,
+        frames_to_save: int
     ) -> Writer:
         """Convenience method to generate a Writer from a Reader.
 
@@ -490,6 +506,8 @@ class Writer(LoggingThread):
             output_filename=output_filename,
             video_codec=video_codec,
             embed_timestamps=embed_timestamps,
+            save_frames=save_frames,
+            frames_to_save=frames_to_save
         )
         return writer
 
@@ -500,7 +518,7 @@ class Writer(LoggingThread):
             fps=self.fps,
             frameSize=self.frame_size,
         )
-        
+        saved_frames = 0
         frame_info = []
         loop_is_running = True
         currently_ommiting = False
@@ -559,6 +577,13 @@ class Writer(LoggingThread):
                         thickness=2,
                     )
 
+                
+                if self.save_frames is True and saved_frames < self.frames_to_save:
+                    image_filepath = Path(self.filepath).parent / f"{self.output_filename}_frame_{self.frame_count}.jpg"
+                    cv2.imwrite(str(image_filepath), frame)
+                    saved_frames += 1
+                    
+
 
                 vw.write(frame)
 
@@ -579,13 +604,16 @@ class Writer(LoggingThread):
 
         # Write CSV file with omitted frame indices. Note this is not the most
         # space-efficient way to store these, but it's probs good enough
-        output_dir = Path(self.filepath).parent
-        csv_filepath = output_dir / f"{self.output_filename}_video_info.csv"
+        csv_filepath = Path(self.filepath).parent / f"{self.output_filename}_video_info.csv"
         with open(csv_filepath, "w") as f:
             csv_writer = csv.writer(f)
             csv_writer.writerow(["frame_number", "original_frame_number", "frame_with_full_frame"])
             for row in frame_info:
                 csv_writer.writerow(row)
+
+        
+
+        
 
 
 
@@ -844,6 +872,8 @@ def main(config: Config):
             logger=LOGGER,
             output_filename=output_filename,
             video_codec=config.video_codec,
+            save_frames= config.save_frames,
+            frames_to_save=config.frames_to_save,
             embed_timestamps=config.embed_timestamps,
         ),
     )
@@ -963,6 +993,8 @@ if __name__ == "__main__":
                 "video_codec": CONFIG.video_codec,
                 "embed_timestamps": CONFIG.embed_timestamps,
                 "background_transparency": CONFIG.background_transparency,
+                "save_frames": CONFIG.save_frames,
+                "frames_to_save": CONFIG.frames_to_save,
             }
         )
         this_config = Config(**this_config_dict)
