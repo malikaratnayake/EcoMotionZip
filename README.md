@@ -1,8 +1,42 @@
 
 # EcoMotionZip
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://choosealicense.com/licenses/gpl-3.0/)
 
-* EcoMotionZip software is designed for efficient and reliable video data compression in resource-constrained camera traps.
-* EcoMotionZip analyzes motion data captured by video camera traps to retain video pixel segments with motion, enabling accurate animal behavioral analysis through both automated and manual methods.
+
+## Overview
+
+EcoMotionZip is an open-source Python-based software developed for motion-based video compression and analysis. It is optimised for efficient and reliable video data compression on resource-constrained camera traps and desktop systems. By analysing motion data captured by video camera traps, EcoMotionZip selectively retains video segments with motion, enabling precise animal behaviour analysis through both automated and manual methods.
+
+EcoMotionZip serves as a robust and flexible tool for researchers and practitioners working with video data, offering advanced capabilities to streamline workflows in video analysis and compression.
+
+## Variants
+
+EcoMotionZip is available in two versions:
+
+1. **EcoMotionZip**: Designed for desktop systems, this version includes a user-friendly Graphical User Interface (GUI) for easy configuration and usage.
+2. **EcoMotionZip Lite**: A command-line version tailored for resource-constrained devices, ensuring lightweight and efficient operation.
+
+## Key Features
+
+#### 1. Motion-Based Video Compression for Resource-Constrained Devices
+EcoMotionZip has been tested on devices such as Raspberry Pi microcomputers and NVIDIA Jetson platforms, demonstrating its ability to compress recorded videos effectively while minimising resource usage.
+
+#### 2. Real-Time Video Compression and Capture
+EcoMotionZip facilitates real-time video capture and compression using Raspberry Pi systems integrated with the PiCamera2 library. This allows single-pass operation, enabling immediate video compression during capture.
+
+#### 3. Compatibility with Polytrack for Automated Insect Tracking
+Videos compressed by EcoMotionZip can be directly processed by **Polytrack** to extract spatiotemporal details of insect movement, including the reconstruction of trajectories.
+
+#### 4. Optimisation for Manual Behavioural Observations
+EcoMotionZip enhances camera trap videos for manual analysis by:
+   - Removing inactive video segments.
+   - Highlighting pixel regions with detected motion to draw the observer’s focus to relevant areas.
+
+#### 5. Frame Extraction for AI Training
+EcoMotionZip enables the extraction of frames containing motion, saving them as images for creating datasets suitable for training Convolutional Neural Networks (CNNs) and other AI models.
+
+
+
  
 
 ## Installation and Dependencies
