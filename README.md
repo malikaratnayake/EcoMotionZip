@@ -110,10 +110,14 @@ Once EcoMotionZip is installed, follow these steps to activate the virtual envir
 
 ## User Interface
 
-![EcoMotionZip GUI](docs/assets/EcoMotionZip_GUI.png){width=70 height=65 }
+<p align="center">
+    <img src="docs/assets/EcoMotionZip_GUI.png" alt="Web Interface EcoMotionZip GUI" width="70%">
+</p>
+
 *Figure 1: The graphical user interface of EcoMotionZip, showcasing the main features and controls for video compression and analysis.*
 
-Figure 1 shows the user interface of the EcoMotionZip software. The user interface is designed for ease of use, with buttons that allow users to perform essential operations:
+
+Above figure shows the user interface of the EcoMotionZip software. The user interface is designed for ease of use, with buttons that allow users to perform essential operations:
 
 - **Custom Configuration:** Load a `.json` file with a custom configuration.
 
