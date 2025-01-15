@@ -13,7 +13,7 @@ class ConfigEditorApp:
     def __init__(self, root):
         self.root = root
         self.root.title("EcoMotionZip Video Processing Configuration")
-        self.config_file = "config.json"
+        self.config_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), "config.json")
         self.config_data = {}
         self.entries = {}
 
@@ -404,7 +404,7 @@ class ConfigEditorApp:
             try:
                 # Open a subprocess for the script
                 process = subprocess.Popen(
-                    ["python", "./src/app.py"],
+                    ["python", os.path.join(os.path.dirname(__file__), "EcoMotionZip_lite.py")],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                     text=True
