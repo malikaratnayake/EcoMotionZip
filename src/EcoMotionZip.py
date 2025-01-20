@@ -265,10 +265,14 @@ class ConfigEditorApp:
                         else:
                             self.entries["frames_to_save"].config(state="disabled")
                     
-                    if key in ["video_source", "output_directory"]:  # Directory chooser
-                        def browse_directory(entry_widget):
-                            selected_path = filedialog.askdirectory()
-                            if selected_path:  # Update the entry only if a directory is selected
+                    if key in ["video_source", "output_directory"]:  # Directory or file chooser
+                        def browse_path(entry_widget, is_file=False):
+                            if is_file:
+                                selected_path = filedialog.askopenfilename()  # File chooser
+                            else:
+                                selected_path = filedialog.askdirectory()  # Directory chooser
+                            
+                            if selected_path:  # Update the entry only if a valid path is selected
                                 entry_widget.delete(0, "end")
                                 entry_widget.insert(0, selected_path)
 
@@ -277,8 +281,21 @@ class ConfigEditorApp:
                         entry.grid(row=section_row, column=1, sticky="w", padx=5, pady=5)
                         self.entries[key] = entry
 
-                        browse_button = ttk.Button(section_frame, text="Browse", command=lambda e=entry: browse_directory(e))
+                        if key == "video_source":  # Allow file or directory selection for video_source
+                            browse_button = ttk.Button(
+                                section_frame,
+                                text="Browse",
+                                command=lambda e=entry: browse_path(e, is_file=True)
+                            )
+                        elif key == "output_directory":  # Only allow directory selection for output_directory
+                            browse_button = ttk.Button(
+                                section_frame,
+                                text="Browse",
+                                command=lambda e=entry: browse_path(e, is_file=False)
+                            )
+                            
                         browse_button.grid(row=section_row, column=2, padx=5, pady=5)
+
 
                     elif key == "save_frames":  # Checkbox for Save Individual Frames
                         var = tk.BooleanVar(value=value)
@@ -295,8 +312,25 @@ class ConfigEditorApp:
                         self.entries[key] = spinbox
                     
                     elif key == "background_transparency":
+                        def validate_float(value_if_allowed):
+                        # Allow only valid floats between 0 and 1
+                            try:
+                                value = float(value_if_allowed)
+                                return 0.0 <= value <= 1.0
+                            except ValueError:
+                                return False
+
+                        validate_command = section_frame.register(validate_float)
+
                         spinbox = tk.Spinbox(
-                        section_frame, from_=0.0, to=1.0, increment=0.1, width=10, format="%.1f"
+                            section_frame, 
+                            from_=0.0, 
+                            to=1.0, 
+                            increment=0.1, 
+                            width=10, 
+                            format="%.1f", 
+                            validate="key", 
+                            validatecommand=(validate_command, "%P")
                         )
                         spinbox.delete(0, "end")
                         spinbox.insert(0, str(value))
@@ -370,6 +404,8 @@ class ConfigEditorApp:
                     value = widget.get()
                     if key == "camera_resolution":  # Convert resolution string to a list of integers
                         self.config_data[key] = list(map(int, value.split("x")))
+                    elif key == "background_transparency": # Convert # Convert resolution string to a float
+                        self.config_data[key] = float(value)
                     elif isinstance(self.config_data[key], int):
                         self.config_data[key] = int(value)
                     elif isinstance(self.config_data[key], float):

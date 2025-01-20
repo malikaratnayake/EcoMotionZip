@@ -564,7 +564,7 @@ class Writer(LoggingThread):
                 self.frame_count += 1
 
                 if self.embed_timestamps is True:
-                    raw_time = nframe / self.fps
+                    raw_time = nframe / (self.fps)
                     minutes, seconds = divmod(raw_time, 60)
                     time_str = f"{int(minutes):02d}:{int(seconds):02d}"
                     cv2.putText(
