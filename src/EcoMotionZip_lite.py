@@ -11,7 +11,8 @@ from threading import Event, Thread
 from typing import Tuple, Union, Optional
 from itertools import product
 import argparse
-
+import subprocess
+from typing import Tuple, List, Dict, Optional
 import cv2
 import numpy as np
 
@@ -19,46 +20,96 @@ LOGGER = logging.getLogger(__name__)
 LOGGER.setLevel(logging.INFO)
 
 class Config:
-    """Configuration class just to provide better parameter hints in code editor."""
+    """Configuration class to store parameters for video processing.
+
+    Attributes:
+        video_source (str): Path to the input directory or a single video file. Set value to 0 to use webcam or any other integer to use a different camera.
+        output_directory (str): Path to the output directory.
+        record_duration (int): Duration of the recording for a single video in seconds.
+        number_of_videos (int): Number of videos to record.
+        reader_sleep_seconds (float): Sleep duration for the reader thread in seconds.
+        reader_flush_proportion (float): Proportion of the reading queue to be filled before the reader thread sleeps.
+        downscale_factor (int): Downscale factor for input video.
+        dilate_kernel_size (int): Kernel size for dilation.
+        movement_threshold (int): Threshold for movement detection.
+        post_motion_record_frames (float): Number of frames to persist for.
+        full_frame_capture_interval (int): Number of frames to persist for.
+        video_codec (str): Video codec to use for output video.
+        num_opencv_threads (int): Number of threads to use for OpenCV.
+    """
     def __init__(
         self,
         video_source: str,
         output_directory: str,
+        record_duration: int,
+        number_of_videos: int,
+        delete_original_after_processing: bool,
+        embed_timestamps: bool,
+        camera_resolution: Tuple[int, int],
+        camera_fps: int,
+        raspberrypi_camera: bool,
         reader_sleep_seconds: float,
         reader_flush_proportion: float,
         downscale_factor: int,
         dilate_kernel_size: int,
         movement_threshold: int,
-        persist_frames: float,
-        full_frame_guarantee: int,
+        post_motion_record_frames: float,
+        full_frame_capture_interval: int,
         video_codec: str,
         num_opencv_threads: int,
+        background_transparency: float,
+        save_frames: bool,
+        frames_to_save: int
     ) -> None:
         self.video_source = video_source
         self.output_directory = output_directory
+        self.record_duration = record_duration
+        self.number_of_videos = number_of_videos
+        self.camera_resolution = camera_resolution
+        self.camera_fps = camera_fps
+        self.raspberrypi_camera = raspberrypi_camera
+        self.delete_original_after_processing = delete_original_after_processing
+        self.embed_timestamps = embed_timestamps
         self.reader_sleep_seconds = reader_sleep_seconds
         self.reader_flush_proportion = reader_flush_proportion
         self.downscale_factor = downscale_factor
         self.dilate_kernel_size = dilate_kernel_size
         self.movement_threshold = movement_threshold
-        self.persist_frames = persist_frames
-        self.full_frame_guarantee = full_frame_guarantee
+        self.post_motion_record_frames = post_motion_record_frames
+        self.full_frame_capture_interval = full_frame_capture_interval
         self.video_codec = video_codec
         self.num_opencv_threads = num_opencv_threads
+        self.background_transparency = background_transparency
+        self.save_frames = save_frames
+        self.frames_to_save = frames_to_save
 
 
 
 def read_args():
+    """
+    Process input arguments and return them as a dictionary.
+
+    Returns:
+        dict: A dictionary containing the parsed arguments.
+    """
     parser = argparse.ArgumentParser(description="Process input and output directories.")
-    parser.add_argument('--video_source', type=str, help='Path to the input directory or a single video file. Set value to 0 to use webcam or any other integer to use a different camera.')
+    parser.add_argument('--video_source', type=lambda x: int(x) if x.isdigit() else str(x), help='Path to the input directory or a single video file. Set value to 0 to use webcam or any other integer to use a different camera.')
     parser.add_argument('--output_directory', type=str, help='Path to the output directory')
+    parser.add_argument('--record_duration', type=int, help='Duration of the recording for a single video in seconds.')
+    parser.add_argument('--number_of_videos', type=int, help='Number of videos to record.')
+    parser.add_argument('--camera_resolution', type=tuple, help='Resolution of the camera.')
+    parser.add_argument('--camera_fps', type=int, help='FPS of the camera.')
+    parser.add_argument('--delete_original_after_processing', type=bool, help='Delete original video after processing.')
     parser.add_argument('--downscale_factor', type=int, help='Downscale factor for input video.')
     parser.add_argument('--dilate_kernel_size', type=int, help='Kernel size for dilation.')
     parser.add_argument('--movement_threshold', type=int, help='Threshold for movement detection.')
-    parser.add_argument('--persist_frames', type=float, help='Number of frames to persist for.')
-    parser.add_argument('--full_frame_guarantee', type=int, help='Number of frames to persist for.')
-    parser.add_argument('--video_codec', type=str, choices=["XVID", "X264"], help='Video codec to use for output video.')
+    parser.add_argument('--post_motion_record_frames', type=float, help='Number of frames to persist for.')
+    parser.add_argument('--full_frame_capture_interval', type=int, help='Number of frames to persist for.')
+    parser.add_argument('--video_codec', type=str, choices=["DIVX", "X264"], help='Video codec to use for output video.')
     parser.add_argument('--num_opencv_threads', type=int, help='Number of threads to use for OpenCV.')
+    parser.add_argument('--background_transparency', type=float, help='Background transparency.')
+    parser.add_argument('--save_frames', type=bool, help='Save frames.')
+    parser.add_argument('--frames_to_save', type=int, help='Number of frames to save.')
 
     args = parser.parse_args()
 
@@ -73,49 +124,72 @@ __config_dict.update((k, v) for k, v in cmd_args.items() if v is not None)
 CONFIG = Config(**__config_dict)
 
 
+
+
 class LoggingThread(Thread):
-    """A wrapper around `threading.Thread` with convenience methods for logging."""
+    """A wrapper around `threading.Thread` with convenience methods for logging.
+    
+    This class extends the functionality of the `threading.Thread` class by providing
+    additional convenience methods for logging. It serves as a base class for other
+    threads that require logging capabilities.
+    
+    Attributes:
+        name (str): The name of the thread.
+        logger (logging.Logger): The logger object used for logging.
+    """
     def __init__(self, name: str, logger: logging.Logger) -> None:
         super().__init__(name=name)
 
         self.logger = logger
 
     def debug(self, msg, *args, **kwargs):
+        """Log a debug message."""
         self.logger.debug(msg, *args, **kwargs)
 
     def info(self, msg, *args, **kwargs):
+        """Log an info message."""
         self.logger.info(msg, *args, **kwargs)
 
     def warning(self, msg, *args, **kwargs):
+        """Log a warning message."""
         self.logger.warning(msg, *args, **kwargs)
 
     def error(self, msg, *args, **kwargs):
+        """Log an error message."""
         self.logger.error(msg, *args, **kwargs)
 
 
 class Reader(LoggingThread):
     """A class to read video from either a file or camera, and push to a queue.
     
-    Reads video from file or camera and pushes each frame onto a queue. Note that
-    this queue *must* be emptied before the the program can be closed, meaning
-    every frame in this queue needs to be handled by some other thread, either
-    with some actual processing or just popping those frames and doing nothing 
-    with them.
+    Reads video from a file or camera and pushes each frame onto a queue. Note that
+    this queue *must* be emptied before the program can be closed, meaning every frame
+    in this queue needs to be handled by some other thread, either with actual processing
+    or just popping those frames and doing nothing with them.
 
-    This Reader includes "smart sleeping". This is intended for use with video 
-    files, where there is no real upper bound on the rate at which we read frames
-    (as opposed to a live camera feed, where you'll be bounded by its FPS). For 
-    files, this Reader can read frames much more quickly than they can be 
-    processed, meaning the reading queue can fill up and start blocking this 
-    reading thread when it tries to push frames onto the full queue (and this 
-    blocking still uses the CPU meaning it's a waste of compute time!). We 
-    therefore let this thread sleep for a while once its queue fills above some
-    threshold (e.g. ~90%).
+    This Reader includes "smart sleeping" to prevent the reading queue from filling up
+    and blocking the reading thread. For video files, where frames can be read much more
+    quickly than they can be processed, this thread will sleep for a while once the queue
+    fills above a certain threshold (e.g. ~90%). This prevents wasting compute time by
+    continuously trying to push frames onto a full queue.
+
+    Attributes:
+        reading_queue (Queue): The queue to push the video frames onto.
+        video_source (Union[str, int]): The source of the video (file path or camera index).
+        record_duration (int): The duration (in seconds) to record the video.
+        stop_signal (Event): The event to signal when to stop reading the video.
+        sleep_seconds (int): The number of seconds to sleep when the queue is full.
+        flush_proportion (float): The proportion of frames to flush from the queue when it is full.
+        logger (logging.Logger): The logger object used for logging.
     """
     def __init__(
         self,
         reading_queue: Queue,
         video_source: Union[str, int],
+        camera_resolution: Tuple[int, int],
+        camera_fps: int,
+        raspberrypi_camera: bool,
+        record_duration: int,
         stop_signal: Event,
         sleep_seconds: int,
         flush_proportion: float,
@@ -149,14 +223,31 @@ class Reader(LoggingThread):
 
         self.reading_queue = reading_queue
         self.video_source = video_source
+        self.record_duration = record_duration
+        self.camera_resolution = camera_resolution
+        self.picam_feed = raspberrypi_camera
+        self.camera_fps = camera_fps
         self.stop_signal = stop_signal
         self.sleep_seconds = sleep_seconds
-        self.video_file_name = os.path.basename(video_source)
+        self.frame_count = 0
+
+        # self.video_file_name = os.path.basename(video_source)
         
         self.flush_thresh = int(flush_proportion * reading_queue.maxsize)
         # Make video capture now so we can dynamically retrieve its FPS and frame size
         try:
-            self.vc = self.get_video_capture(source=self.video_source)
+            self.vc, self.cam_feed = self.get_video_capture(source=self.video_source)  
+            if self.cam_feed is True and self.picam_feed is True:
+                from picamera2 import Picamera2
+                pifps = round((1/self.camera_fps)*1000000)
+                cam_setup = {"size": self.camera_resolution, "format": "RGB888"}
+                self.vc = Picamera2()
+                video_config_cam = self.vc.create_video_configuration(main=cam_setup, controls={"FrameDurationLimits": (pifps, pifps)})
+                self.vc.configure(video_config_cam)
+                self.info(f"Camera resolution: {self.camera_resolution}, FPS: {self.camera_fps}")
+            else:
+                self.picam_feed = False
+     
         except ValueError:
             self.stop_signal.set()
             self.reading_queue.put(None)
@@ -166,15 +257,32 @@ class Reader(LoggingThread):
             f"Will sleep {self.sleep_seconds} seconds if reading queue fills up with {self.flush_thresh} frames. This *should not happen* if you're using a live webcam, else the frames are being processed too slowly!"
         )
 
+
     def run(self) -> None:
+        self.start_time = time.monotonic()
+
+        if self.picam_feed is True: 
+            self.vc.start()
+
         while True:
+            time_now = time.monotonic()
+
             if self.stop_signal.is_set():
                 self.info("Received stop signal")
                 break
 
-            grabbed, frame = self.vc.read()
-            if not grabbed or frame is None:
+            if self.picam_feed is True:
+                frame = self.vc.capture_array()
+            else:
+                grabbed, frame = self.vc.read()
+
+            if frame is None or self.check_recording_complete(time_now):
                 break
+
+            if self.cam_feed is True:
+                self.frame_count += 1
+                if self.frame_count % 150 == 0:
+                    self.info(f"Read {self.frame_count} frames so far. FPS: {self.calculate_fps(self.start_time, time_now)}")
 
             # Make sure queue has not filled up too much. This is really bad if
             # this happens for a *live* feed (i.e. webcam) since it means you
@@ -195,20 +303,41 @@ class Reader(LoggingThread):
 
             self.reading_queue.put(frame)
 
+          
         # Append None to indicate end of queue
         self.info("Adding None to end of reading queue")
         self.reading_queue.put(None)
-        self.vc.release()
+        if self.picam_feed is True:
+            self.vc.stop()
+            self.vc.close()
+        else:
+            self.vc.release()
+
         self.stop_signal.set()
 
     def get_fps(self) -> int:
-        return int(self.vc.get(cv2.CAP_PROP_FPS))
+        if self.picam_feed is True:
+            return self.camera_fps
+        else:
+            return int(self.vc.get(cv2.CAP_PROP_FPS))
+    
+    def check_recording_complete(self, time_now) -> bool:
+        if self.cam_feed and (time_now - self.start_time >= self.record_duration):
+            return True
+        else:
+            return False
+    
+    def calculate_fps(self, start_time, end_time):
+        return round(self.frame_count/(end_time-start_time),2)
 
     
     def get_frame_size(self) -> Tuple[int]:
-        width = int(self.vc.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height = int(self.vc.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        return (width, height)
+        if self.picam_feed is True:
+            return self.camera_resolution
+        else:
+            width = int(self.vc.get(cv2.CAP_PROP_FRAME_WIDTH))
+            height = int(self.vc.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            return (width, height)
 
     @staticmethod
     def get_video_capture(source: Union[str, int]) -> cv2.VideoCapture:
@@ -222,9 +351,10 @@ class Reader(LoggingThread):
         :return: a VideoCapture object for the given `source`.
         """
         if type(source) is str:
-            return cv2.VideoCapture(filename=source)
+            return cv2.VideoCapture(filename=source), False
         elif type(source) is int:
-            return cv2.VideoCapture(index=source)
+            return cv2.VideoCapture(index=source), True
+
         else:
             raise ValueError(
                 "`source` must be a filepath to a video, or an integer index for the camera"
@@ -296,6 +426,9 @@ class Writer(LoggingThread):
         logger: logging.Logger,
         output_filename: str,
         video_codec: str,
+        embed_timestamps: bool,
+        save_frames: bool,
+        frames_to_save: int
     ) -> None:
         super().__init__(name="WriterThread", logger=logger)
 
@@ -305,6 +438,13 @@ class Writer(LoggingThread):
         self.fps = fps
         self.stop_signal = stop_signal
         self.output_filename = output_filename
+        self.embed_timestamps = embed_timestamps
+        self.save_frames = save_frames
+        if self.save_frames is True:
+            self.frames_to_save = frames_to_save
+        else:
+            self.frames_to_save = 0
+
 
         self.fourcc = cv2.VideoWriter_fourcc(*video_codec)
         self.flush_thresh = int(0.25 * writing_queue.maxsize)
@@ -325,6 +465,9 @@ class Writer(LoggingThread):
         logger: logging.Logger,
         output_filename: str,
         video_codec: str,
+        embed_timestamps: bool,
+        save_frames: bool,
+        frames_to_save: int
     ) -> Writer:
         """Convenience method to generate a Writer from a Reader.
 
@@ -364,6 +507,9 @@ class Writer(LoggingThread):
             logger=logger,
             output_filename=output_filename,
             video_codec=video_codec,
+            embed_timestamps=embed_timestamps,
+            save_frames=save_frames,
+            frames_to_save=frames_to_save
         )
         return writer
 
@@ -374,7 +520,7 @@ class Writer(LoggingThread):
             fps=self.fps,
             frameSize=self.frame_size,
         )
-        
+        saved_frames = 0
         frame_info = []
         loop_is_running = True
         currently_ommiting = False
@@ -417,10 +563,31 @@ class Writer(LoggingThread):
                 else:
                     frame, nframe, first_in_seq ,ff_recorded = frame_combo
 
+                self.frame_count += 1
+
+                if self.embed_timestamps is True:
+                    raw_time = nframe / (self.fps)
+                    minutes, seconds = divmod(raw_time, 60)
+                    time_str = f"{int(minutes):02d}:{int(seconds):02d}"
+                    cv2.putText(
+                        frame,
+                        text=f"Frame: {self.frame_count}  |  Raw Frame: {nframe}  |  Time: {time_str}",
+                        org=(10, 30),
+                        fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                        fontScale=1,
+                        color=(0, 255, 0),
+                        thickness=2,
+                    )
+
+                
+                if self.save_frames is True and saved_frames < self.frames_to_save:
+                    image_filepath = Path(self.filepath).parent / f"{self.output_filename}_frame_{self.frame_count}.jpg"
+                    cv2.imwrite(str(image_filepath), frame)
+                    saved_frames += 1
+                    
+
 
                 vw.write(frame)
-                self.frame_count += 1
-                
 
                 if first_in_seq is True:
                     if ff_recorded is True:
@@ -439,13 +606,14 @@ class Writer(LoggingThread):
 
         # Write CSV file with omitted frame indices. Note this is not the most
         # space-efficient way to store these, but it's probs good enough
-        output_dir = Path(self.filepath).parent
-        csv_filepath = output_dir / f"{self.output_filename}_video_info.csv"
+        csv_filepath = Path(self.filepath).parent / f"{self.output_filename}_video_info.csv"
         with open(csv_filepath, "w") as f:
             csv_writer = csv.writer(f)
             csv_writer.writerow(["frame_number", "original_frame_number", "frame_with_full_frame"])
             for row in frame_info:
                 csv_writer.writerow(row)
+
+    
 
 
 
@@ -458,8 +626,9 @@ class MotionDetector(LoggingThread):
         downscale_factor: int,
         dilate_kernel_size: int,
         movement_threshold: int,
-        persist_frames: float,
-        full_frame_guarantee: int,
+        post_motion_record_frames: float,
+        full_frame_capture_interval: int,
+        background_transparency: float,
         stop_signal: Event,
         logger: logging.Logger,
     ) -> None:
@@ -478,10 +647,15 @@ class MotionDetector(LoggingThread):
         downscaled_kernel_size = int(dilate_kernel_size / self.downscale_factor)
         self.dilation_kernel = np.ones((downscaled_kernel_size, downscaled_kernel_size))
         self.movement_threshold = movement_threshold
-        self.persist_frames = persist_frames
-        self.full_frame_guarantee  = full_frame_guarantee
+        self.post_motion_record_frames = post_motion_record_frames
+        self.full_frame_capture_interval  = full_frame_capture_interval
+        self.background_transparency = background_transparency
+        if self.background_transparency > 0:
+            self.transparent_background = True
+        else:
+            self.transparent_background = False
 
-        if self.persist_frames > 0:
+        if self.post_motion_record_frames > 0:
             self.buffer_analysis = True
 
         if self.downscale_factor != 1:
@@ -522,13 +696,13 @@ class MotionDetector(LoggingThread):
         
         full_frame_recorded = False
 
-        if (self.nframe % self.full_frame_guarantee == 0) or (self.nframe == 1):
+        if (self.nframe % self.full_frame_capture_interval == 0) or (self.nframe == 1):
             self.record_full_frame = True
 
 
         if self.downscale_factor == 1:
             # Downscale factor of 1 really just means no downscaling at all
-            downscaled_frame = frame
+            downscaled_frame = cv2.cvtColor(frame,  cv2.COLOR_BGR2GRAY)
         else:
             downscaled_frame = cv2.cvtColor(cv2.resize(frame, dsize=None, fx=self.fx, fy=self.fy),  cv2.COLOR_BGR2GRAY) # what if gray scale and then resize
             
@@ -558,6 +732,9 @@ class MotionDetector(LoggingThread):
 
             if self.downscale_factor != 1:
                 mask = cv2.resize(mask, dsize=(orig_shape[1], orig_shape[0]))
+                
+            if self.transparent_background is True:
+                transparent_frame = cv2.addWeighted(frame, (self.background_transparency), np.zeros_like(frame), (1-self.background_transparency), 0)
 
             if not cv2.countNonZero(self.prev_mask):
                 first_frame_in_seq = True
@@ -568,9 +745,13 @@ class MotionDetector(LoggingThread):
                     full_frame_recorded = True
                 else:
                     motion_frame = cv2.bitwise_and(frame, frame, mask=mask)
+                    if self.transparent_background is True:
+                        motion_frame = cv2.add(cv2.absdiff(motion_frame, transparent_frame), motion_frame)
 
             else:
                 motion_frame = cv2.bitwise_and(frame, frame, mask=mask)
+                if self.transparent_background is True:
+                    motion_frame = cv2.add(cv2.absdiff(motion_frame, transparent_frame), motion_frame)
             
             
             self.prev_mask = mask.copy()
@@ -578,7 +759,7 @@ class MotionDetector(LoggingThread):
             put_to_queue = True
 
         elif self.buffer_analysis is True and cv2.countNonZero(self.prev_mask):
-            if self.buffer_count < self.persist_frames:
+            if self.buffer_count < self.post_motion_record_frames:
                 self.buffer_count += 1
                 motion_frame = cv2.bitwise_and(frame, frame, mask=self.prev_mask)
                 put_to_queue = True
@@ -601,10 +782,28 @@ def main(config: Config):
     # Make sure opencv doesn't use too many threads and hog CPUs
     cv2.setNumThreads(config.num_opencv_threads)
 
-    # Use the input filepath to figure out the output filepath
-    output_filename = os.path.splitext(os.path.basename(config.video_source))[0]
+    # Use the input filepath to figure out the output filename
+    if type(config.video_source) is str:
+        output_filename = os.path.splitext(os.path.basename(config.video_source))[0]
+    else:
+        output_filename = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    output_parent_directory = Path(config.output_directory , "EcoMotionZip")
+    # Determine the output directory based on user input
+
+    if os.path.isdir(config.output_directory):
+        output_parent_directory = Path(config.output_directory, "EcoMotionZip")
+        log_message = f"Outputting to {output_parent_directory}"
+    else:
+        if os.path.isdir(config.video_source):
+            output_parent_directory = Path(config.video_source, "EcoMotionZip")
+            log_message =f"Output directory not specified or unavailable. Outputting to video source directory {output_parent_directory}"
+        else:
+            output_parent_directory = Path(Path(config.video_source).parent, "EcoMotionZip")
+            log_message = f"Output directory not specified or unavailable. Outputting to video source directory  {output_parent_directory}"
+
+
+
+    # output_parent_directory = Path(config.output_directory , "EcoMotionZip")
     if not output_parent_directory.exists():
         os.makedirs(output_parent_directory, exist_ok=True)
 
@@ -618,7 +817,7 @@ def main(config: Config):
     # output_directory = Path(f"out/{output_filename}")
     if not output_directory.exists():
         output_directory.mkdir()
-    output_filepath = str(output_directory / f"{output_filename}.avi")
+    output_filepath = str(output_directory / f"{output_filename}.mp4s")
 
     # Create some handlers for logging output to both console and file
     console_handler = logging.StreamHandler()
@@ -637,13 +836,17 @@ def main(config: Config):
     # formatted_start_time  = start.strftime("%Y-%m-%d %H:%M:%S")
     LOGGER.info(f"Starting processing at :  {datetime.fromtimestamp(start)}")
     LOGGER.info(f"Running main() with Config:  {config.__dict__}")
-    LOGGER.info(f"Outputting to {output_filepath}")
+    LOGGER.info(f"Outputting to {log_message}")
 
     # Create all of our threads
     threads = (
         reader := Reader(
             reading_queue=reading_queue,
             video_source=config.video_source,
+            record_duration=config.record_duration,
+            camera_resolution=config.camera_resolution,
+            camera_fps=config.camera_fps,
+            raspberrypi_camera=config.raspberrypi_camera,
             stop_signal=stop_signal,
             sleep_seconds=config.reader_sleep_seconds,
             flush_proportion=config.reader_flush_proportion,
@@ -655,8 +858,9 @@ def main(config: Config):
             downscale_factor=config.downscale_factor,
             dilate_kernel_size=config.dilate_kernel_size,
             movement_threshold=config.movement_threshold,
-            persist_frames=config.persist_frames,
-            full_frame_guarantee=config.full_frame_guarantee,
+            post_motion_record_frames=config.post_motion_record_frames,
+            full_frame_capture_interval=config.full_frame_capture_interval,
+            background_transparency=config.background_transparency,
             stop_signal=stop_signal,
             logger=LOGGER,
         ),
@@ -668,6 +872,9 @@ def main(config: Config):
             logger=LOGGER,
             output_filename=output_filename,
             video_codec=config.video_codec,
+            save_frames= config.save_frames,
+            frames_to_save=config.frames_to_save,
+            embed_timestamps=config.embed_timestamps,
         ),
     )
 
@@ -712,26 +919,32 @@ def main(config: Config):
     LOGGER.info(f"Finished processing at :  {datetime.fromtimestamp(end)}")
     LOGGER.info(f"Finished main() in {duration_seconds:.2f} seconds.")
 
+    if type(config.video_source) is str and config.delete_original_after_processing is True:
+        os.remove(config.video_source)
+        LOGGER.info(f"Deleted original video file: {config.video_source}")
+    
+
 
 if __name__ == "__main__":
     downscale_factor = CONFIG.downscale_factor
     dilate_kernel_size = CONFIG.dilate_kernel_size
     movement_threshold = CONFIG.movement_threshold
-    persist_frames = CONFIG.persist_frames
-    full_frame_guarantee = CONFIG.full_frame_guarantee
+    post_motion_record_frames = CONFIG.post_motion_record_frames
+    full_frame_capture_interval = CONFIG.full_frame_capture_interval
     video_codec = CONFIG.video_codec
-    output_directory = CONFIG.output_directory
     video_source = CONFIG.video_source
+    embed_timestamps = CONFIG.embed_timestamps
     
     if type(video_source) != int:
         video_source = Path(video_source)
         if video_source.is_dir():
-            video_source = [str(v) for v in video_source.iterdir()]
+            video_source = [str(v) for v in video_source.iterdir() if v.suffix in ['.avi', '.mp4', '.h264', '.MTS']]
         elif type(video_source) is not list:
             video_source = [str(video_source)]
     else:
         # Just to make it iterable
-        video_source = [video_source]
+        video_source = [video_source]*CONFIG.number_of_videos
+
 
     if type(downscale_factor) is not list:
         downscale_factor = [downscale_factor]
@@ -739,12 +952,10 @@ if __name__ == "__main__":
         dilate_kernel_size = [dilate_kernel_size]
     if type(movement_threshold) is not list:
         movement_threshold = [movement_threshold]
-    if type(persist_frames) is not list:
-        persist_frames = [persist_frames]
-    if type(full_frame_guarantee) is not list:
-        full_frame_guarantee = [full_frame_guarantee]
-    if type(video_codec) is not list:
-        video_codec = [video_codec]
+    if type(post_motion_record_frames) is not list:
+        post_motion_record_frames = [post_motion_record_frames]
+    if type(full_frame_capture_interval) is not list:
+        full_frame_capture_interval = [full_frame_capture_interval]
 
 
     parameter_combos = product(
@@ -752,26 +963,38 @@ if __name__ == "__main__":
         downscale_factor,
         dilate_kernel_size,
         movement_threshold,
-        persist_frames,
-        full_frame_guarantee,
+        post_motion_record_frames,
+        full_frame_capture_interval,
     )
     parameter_keys = [
         "video_source",
         "downscale_factor",
         "dilate_kernel_size",
         "movement_threshold",
-        "persist_frames",
-        "full_frame_guarantee",
+        "post_motion_record_frames",
+        "full_frame_capture_interval",
     ]
+    # print("Length of parameter_combos:", len(parameter_combos))
+
     for combo in parameter_combos:
         this_config_dict = dict(zip(parameter_keys, combo))
         this_config_dict.update(
             {
-                "output_directory": output_directory,
+                "output_directory": CONFIG.output_directory,
+                "record_duration": CONFIG.record_duration,
+                "number_of_videos": CONFIG.number_of_videos,
+                "camera_resolution": CONFIG.camera_resolution,
+                "camera_fps": CONFIG.camera_fps,
+                "raspberrypi_camera": CONFIG.raspberrypi_camera,
+                "delete_original_after_processing": CONFIG.delete_original_after_processing,
                 "reader_sleep_seconds": CONFIG.reader_sleep_seconds,
                 "reader_flush_proportion": CONFIG.reader_flush_proportion,
                 "num_opencv_threads": CONFIG.num_opencv_threads,
                 "video_codec": CONFIG.video_codec,
+                "embed_timestamps": CONFIG.embed_timestamps,
+                "background_transparency": CONFIG.background_transparency,
+                "save_frames": CONFIG.save_frames,
+                "frames_to_save": CONFIG.frames_to_save,
             }
         )
         this_config = Config(**this_config_dict)

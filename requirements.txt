@@ -1,0 +1,16 @@
+# Core dependencies
+numpy>=1.24
+opencv-python>=4.8
+
+# If you're running in a headless environment (no GUI/display), use this instead of opencv-python:
+# opencv-python-headless>=4.8
+
+# Tkinter is part of the Python standard library for most OSes.
+# On some Linux distros you may need to install it separately:
+#   sudo apt-get install python3-tk
+
+# Raspberry Pi camera support (only needed if CONFIG.raspberrypi_camera is True).
+# Picamera2 is usually installed via Raspberry Pi OS packages, not PyPI:
+#   sudo apt-get install -y python3-picamera2
+# If you prefer PyPI (may not be available/fully supported on all platforms):
+# picamera2

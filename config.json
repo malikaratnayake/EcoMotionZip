@@ -1,20 +1,26 @@
 {
-    "video_source": "/Users/mrat0010/Documents/GitHub/EcoMotionZip/testing/test_videos/PICT/",
-    "output_directory": "/Users/mrat0010/Documents/GitHub/EcoMotionZip/testing",
+    "video_source": "",
+    "output_directory": "",
+    "video_codec": "H264",
+    "raspberrypi_camera": false,
     "record_duration": 60,
     "number_of_videos": 1,
-    "camera_resolution": [1920,1080],
+    "camera_resolution": [
+        1920,
+        1080
+    ],
     "camera_fps": 32,
-    "raspberrypi_camera": false,
-    "delete_original": false,
-    "embed_timestamps": true,
-    "reader_sleep_seconds": 1,
-    "reader_flush_proportion": 0.9,
+    "delete_original_after_processing": false,
+    "embed_timestamps": false,
+    "background_transparency": 0.0,
+    "save_frames": false,
+    "frames_to_save": 50,
     "downscale_factor": 16,
     "dilate_kernel_size": 128,
     "movement_threshold": 40,
-    "persist_frames": 0,
-    "full_frame_guarantee": 300,
-    "video_codec": "DIVX",
-    "num_opencv_threads": 10
+    "post_motion_record_frames": 0,
+    "full_frame_capture_interval": 300,
+    "num_opencv_threads": 10,
+    "reader_sleep_seconds": 1,
+    "reader_flush_proportion": 0.9
 }

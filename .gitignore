@@ -1,6 +1,1 @@
-
-output
-out
-testing
-EnergyTests
-misc
+./src/__pycache__/
