@@ -367,7 +367,7 @@ class ConfigEditorApp:
                         self.entries[key] = combo
 
                     elif key == "video_codec":  # Dropdown for fixed options
-                        options = ["DIVX", "X264"]
+                        options = ["DIVX", "X264", "FFV1"]
                         combo = ttk.Combobox(section_frame, values=options, state="readonly", width=10)
                         combo.set(value)
                         combo.grid(row=section_row, column=1, sticky="w", padx=5, pady=5)

@@ -43,48 +43,72 @@ EcoMotionZip enables the extraction of frames containing motion, saving them as 
 
 ## Installation
 
-This guide provides detailed instructions on installing EcoMotionZip on macOS and Windows desktop systems. Instructions for installing EcoMotionZip on Raspberry Pi and other edge computing platforms will be provided separately.
+This guide provides detailed instructions for installing **EcoMotionZip** on **macOS** and **Windows** desktop systems.  
+<!-- Instructions for installing on **Raspberry Pi** and other edge computing platforms will be provided separately. -->
 
-Follow these steps to install EcoMotionZip on either macOS or Windows systems:
+### 1. Ensure Python is Installed
+EcoMotionZip requires **Python 3.8 or later**. Check your Python version:
 
-1. **Ensure Python is Installed**  
-   EcoMotionZip requires Python 3.7 or later. Check if Python is installed by running the following command:
-   ```bash
-   python --version   
-   ```
-   If Python is not installed, download and install the latest version from the [official Python website](https://www.python.org/downloads/). On Windows, ensure you check the box to add Python to your PATH during installation.
+```bash
+python --version
+```
 
-2. **Install pip and virtualenv**  
-   Install `pip` and `virtualenv` to manage dependencies:
-   ```bash
-   python -m ensurepip --upgrade  
-   pip install --upgrade virtualenv
-   ```
+If Python is not installed, download and install the latest version from the [official Python website](https://www.python.org/downloads/).  
+> **Windows Users:** During installation, make sure to check **"Add Python to PATH"**.
 
-3. **Clone the EcoMotionZip Repository**  
-   Clone the repository from GitHub:
-   ```bash
-   git clone https://github.com/your-repository/EcoMotionZip.git
-   cd EcoMotionZip
-   ```
 
-4. **Set Up a Virtual Environment**  
-   Create and activate a virtual environment:
-   ```bash
-   python -m virtualenv venv   
-   ```
-   
-   Activate the virtual environment
-   ```bash
-   source venv/bin/activate    # macOS
-   venv\Scripts\activate      # Windows
-   ```
 
-5. **Install Dependencies**  
-   Install the required packages from the `requirements.txt` file:
-   ```bash
-   pip install -r requirements.txt
-   ```
+### 2. Install `pip` and `virtualenv`
+`pip` is the Python package manager, and `virtualenv` helps isolate dependencies.
+
+```bash
+python -m ensurepip --upgrade
+pip install --upgrade pip virtualenv
+```
+
+### 3. Clone the EcoMotionZip Repository
+Download the source code:
+
+```bash
+git clone https://github.com/malikaratnayake/EcoMotionZip.git
+cd EcoMotionZip
+```
+
+### 4. Set Up a Virtual Environment
+It’s recommended to use a virtual environment inside the project folder to avoid dependency conflicts.
+
+```bash
+python -m virtualenv venv
+```
+
+Activate the virtual environment:  
+- **macOS/Linux**:
+  ```bash
+  source venv/bin/activate
+  ```
+- **Windows**:
+  ```bash
+  venv\Scripts\activate
+  ```
+
+### 5. Install Dependencies
+EcoMotionZip’s dependencies are listed in `requirements.txt`.
+
+```bash
+pip install -r requirements.txt
+```
+
+**Notes:**
+- If you are using EcoMotionZip **without a display** (headless mode), replace `opencv-python` with `opencv-python-headless` in the requirements file.
+- On **Linux/macOS**, if you see an error about Tkinter not being found, install it via your package manager:
+  ```bash
+  sudo apt-get install python3-tk    # Debian/Ubuntu
+  brew install python-tk             # macOS with Homebrew
+  ```
+- For **Raspberry Pi camera support**, install Picamera2:
+  ```bash
+  sudo apt-get install -y python3-picamera2
+  ```
 
 
 ## Usage
