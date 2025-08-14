@@ -11,8 +11,6 @@ from threading import Event, Thread
 from typing import Tuple, Union, Optional
 from itertools import product
 import argparse
-import subprocess
-from typing import Tuple, List, Dict, Optional
 import cv2
 import numpy as np
 
@@ -613,7 +611,9 @@ class Writer(LoggingThread):
             for row in frame_info:
                 csv_writer.writerow(row)
 
-    
+        
+
+        
 
 
 
@@ -817,7 +817,7 @@ def main(config: Config):
     # output_directory = Path(f"out/{output_filename}")
     if not output_directory.exists():
         output_directory.mkdir()
-    output_filepath = str(output_directory / f"{output_filename}.mp4s")
+    output_filepath = str(output_directory / f"{output_filename}.avi")
 
     # Create some handlers for logging output to both console and file
     console_handler = logging.StreamHandler()
