@@ -878,27 +878,27 @@ class Writer(LoggingThread):
                     loop_is_running = False
                     break
 
-                frame, nframe, first_in_seq, ff_recorded = frame_combo
-                self.frame_count += 1
+                frame= frame_combo
+             
 
-                if self.embed_timestamps:
-                    raw_time = nframe / float(self.fps)
-                    minutes, seconds = divmod(raw_time, 60)
-                    time_str = f"{int(minutes):02d}:{int(seconds):02d}"
-                    cv2.putText(
-                        frame,
-                        text=f"Frame: {self.frame_count}  |  Raw Frame: {nframe}  |  Time: {time_str}",
-                        org=(10, 30),
-                        fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-                        fontScale=1,
-                        color=(0, 255, 0),
-                        thickness=2,
-                    )
+                # if self.embed_timestamps:
+                #     raw_time = nframe / float(self.fps)
+                #     minutes, seconds = divmod(raw_time, 60)
+                #     time_str = f"{int(minutes):02d}:{int(seconds):02d}"
+                #     cv2.putText(
+                #         frame,
+                #         text=f"Frame: {self.frame_count}  |  Raw Frame: {nframe}  |  Time: {time_str}",
+                #         org=(10, 30),
+                #         fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                #         fontScale=1,
+                #         color=(0, 255, 0),
+                #         thickness=2,
+                #     )
 
-                if self.save_frames and saved_frames < self.frames_to_save:
-                    image_filepath = Path(self.filepath).parent / f"{self.output_filename}_frame_{self.frame_count}.jpg"
-                    cv2.imwrite(str(image_filepath), frame)
-                    saved_frames += 1
+                # if self.save_frames and saved_frames < self.frames_to_save:
+                #     image_filepath = Path(self.filepath).parent / f"{self.output_filename}_frame_{self.frame_count}.jpg"
+                #     cv2.imwrite(str(image_filepath), frame)
+                #     saved_frames += 1
 
                 # Write via selected backend
                 if self.backend == "opencv" and vw is not None:
@@ -906,12 +906,12 @@ class Writer(LoggingThread):
                 else:
                     self._write_frame_ffmpeg(frame)
 
-                if first_in_seq is True:
-                    nff_number: Optional[int] = self.frame_count if ff_recorded is True else None
-                    frame_info.append([self.frame_count, nframe, nff_number])
+                # if first_in_seq is True:
+                #     nff_number: Optional[int] = self.frame_count if ff_recorded is True else None
+                #     frame_info.append([self.frame_count, nframe, nff_number])
 
-                if self.frame_count % 50 == 0:
-                    self.info(f"Written {self.frame_count} frames so far")
+                # if self.frame_count % 50 == 0:
+                #     self.info(f"Written {self.frame_count} frames so far")
 
             self.debug(f"Flushed {frames_to_flush} frames!")
 
@@ -922,12 +922,12 @@ class Writer(LoggingThread):
             self._close_ffmpeg()
 
         # Sidecar CSV as before
-        csv_filepath = Path(self.filepath).parent / f"{self.output_filename}_video_info.csv"
-        with open(csv_filepath, "w", newline="") as f:
-            csv_writer = csv.writer(f)
-            csv_writer.writerow(["frame_number", "original_frame_number", "frame_with_full_frame"])
-            for row in frame_info:
-                csv_writer.writerow(row)     
+        # csv_filepath = Path(self.filepath).parent / f"{self.output_filename}_video_info.csv"
+        # with open(csv_filepath, "w", newline="") as f:
+        #     csv_writer = csv.writer(f)
+        #     csv_writer.writerow(["frame_number", "original_frame_number", "frame_with_full_frame"])
+        #     for row in frame_info:
+        #         csv_writer.writerow(row)     
 
 
 
@@ -994,10 +994,17 @@ class MotionDetector(LoggingThread):
             if frame is None:
                 break
 
-            self.detect_motion(frame=frame)
+            # self.detect_motion(frame=frame)
+            self.transfer_to_writing_queue(frame=frame)
 
         # Make sure motion writer knows to stop
         self.writing_queue.put(None)
+
+    def transfer_to_writing_queue(self,frame):
+        """
+        Transfer a frame to the writing queue, ensuring it is in the correct format.
+        """
+        self.writing_queue.put(frame)
 
 
     def detect_motion(self, frame):
