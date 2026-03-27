@@ -1,7 +1,7 @@
 {
-    "video_source": "/Users/mrat0010/Documents/Costa_Data/Test_Videos/AGRICAM_4_20250730_S_15_C0_113224.mp4",
-    "output_directory": "/Users/mrat0010/Documents/test/",
-    "video_codec": "DIVX",
+    "video_source": "",
+    "output_directory": "",
+    "video_codec": "X264",
     "raspberrypi_camera": false,
     "record_duration": 60,
     "number_of_videos": 1,

@@ -45,7 +45,7 @@ from PySide6.QtWidgets import (
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
 _HERE        = Path(__file__).parent
-_LITE_SCRIPT = _HERE / "EcoMotionZip_lite.py"
+_LITE_SCRIPT = _HERE / "pipeline.py"
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Tailwind CSS v3 colour tokens
