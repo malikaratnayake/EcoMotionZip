@@ -1,9 +1,10 @@
+<p align="center">
+    <img src="docs/assets/EcoMotionZip_logo_.png" alt="EcoMotionZipL: Motion-based video compression" width="100%">
+</p>
 
 # EcoMotionZip
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://choosealicense.com/licenses/gpl-3.0/)
 
-
-## Overview
 
 EcoMotionZip is an open-source Python-based software developed for motion-based video compression and analysis. It is optimised for efficient and reliable video data compression on resource-constrained camera traps and desktop systems. By analysing motion data captured by video camera traps, EcoMotionZip selectively retains video segments with motion, enabling precise animal behaviour analysis through both automated and manual methods.
 
