@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(find /Users/mrat0010/Documents/GitHub/EcoMotionZip -name *.png -o -name *.jpg -o -name *.svg)",
-      "Bash(wc -l /Users/mrat0010/Documents/GitHub/EcoMotionZip/src/*.py)"
-    ]
-  }
-}
