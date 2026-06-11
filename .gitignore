@@ -21,9 +21,10 @@ build/
 .AppleDouble
 .LSOverride
 
-# IDE
+# IDE / editor
 .vscode/
 .idea/
+.claude/
 *.swp
 *.swo
 
