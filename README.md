@@ -1,159 +1,156 @@
+<p align="center">
+    <img src="docs/assets/EcoMotionZip_logo_.png" alt="EcoMotionZip: Motion-based video compression" width="100%">
+</p>
 
 # EcoMotionZip
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://choosealicense.com/licenses/gpl-3.0/)
+[![DOI](https://img.shields.io/badge/DOI-10.1007%2Fs11263--026--02803--5-blue)](https://doi.org/10.1007/s11263-026-02803-5)
+[![Python package](https://img.shields.io/badge/Python-package-green.svg)](https://www.python.org/)
+[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Raspberry%20Pi-lightgrey.svg)]()
 
-* EcoMotionZip software is designed for efficient and reliable video data compression in resource-constrained camera traps.
-* EcoMotionZip analyzes motion data captured by video camera traps to retain video pixel segments with motion, enabling accurate animal behavioral analysis through both automated and manual methods.
- 
 
-## Installation and Dependencies
+EcoMotionZip is an open-source tool for **motion-based video compression** designed for wildlife camera traps and ecological monitoring. It analyses video footage and keeps only the parts where something is moving — dramatically reducing file sizes while preserving the moments that matter for research and analysis.
 
-EcoMotionZip relies on several essential packages for its basic functionality, including Numpy, OpenCV, and FFMPEG. This documentation provides step-by-step instructions for setting up the EcoMotionZip software on a Raspberry Pi platform running the BookWorm OS. It is compatible with Raspberry Pi or similar Linux-based platforms, whether or not a virtual environment is used.
+This approach is especially valuable for tracking small organisms such as insects, which can be difficult to detect within a large field of view and are often missed during manual video observation. By focusing only on motion events, EcoMotionZip also significantly reduces the time required for reviewing footage.
 
-**1. Update and Upgrade Packages**
-   
-Before installing EcoMotionZip, ensure your system packages are up-to-date by running the following commands:
+---
+
+## Which version should I use?
+
+| I want to… | Use this |
+|---|---|
+| Process videos on my **Mac or Windows laptop/desktop** using a graphical interface | **Desktop App** — see [Desktop Installation](docs/install-desktop.md) |
+| Run it on a **Raspberry Pi** or process videos automatically without a screen | **Headless Mode** — see [Raspberry Pi Installation](docs/install-raspberry-pi.md)  |
+| Compress video **live while recording** with a Pi camera | **Headless Mode** on Raspberry Pi (Beta)  |
+
+Both modes use exactly the same compression engine. The Desktop App simply provides a graphical interface to configure and monitor that same engine.
+
+---
+
+## Desktop App (Mac / Windows)
+
+<p align="center">
+    <img src="docs/assets/EcoMotionZip_GUI_1.png" alt="EcoMotionZip Desktop Interface - Configuration" height="400">
+    <img src="docs/assets/EcoMotionZip_GUI_2.png" alt="EcoMotionZip Desktop Interface - Monitor" height="400">
+</p>
+
+The desktop application provides a graphical interface for:
+
+- Selecting video files or folders to process
+- Adjusting motion sensitivity and compression settings
+- Monitoring processing progress in real time
+- Viewing compression results and statistics
+
+**→ [Desktop Installation Guide](docs/install-desktop.md)**
+
+Quick start (after installation):
+
 ```bash
-sudo apt update
-sudo apt upgrade
+python run_desktop.py
 ```
 
+---
 
-**2. Install OpenCV**
+## Headless Mode (Raspberry Pi / Command Line)
 
-Install the latest version of OpenCV:
+Run EcoMotionZip without a screen — ideal for Raspberry Pi camera traps, remote servers, or automated pipelines.
 
-```bash
-sudo apt install python3-opencv
-```
+**→ [Raspberry Pi Installation Guide](docs/install-raspberry-pi.md)**
 
-**3. Install PiCamera2 Support (Optional):**
-
-If you intend to run EcoMotionZip in real-time using Raspberry Pi Camera V3 or later, install the libcamera package to enable PiCamera2 support.
+Quick start (after installation):
 
 ```bash
-sudo apt install -y python3-libcamera python3-kms++ libcap-dev
+python run_headless.py --video_source /path/to/video.mp4 --output_directory /path/to/output
 ```
 
-**4. Install Additional Codecs with FFMPEG**
+All options:
 
-Ensure proper codec support for FFMPEG:
 ```bash
-sudo apt-get install ffmpeg x264 libx264-dev
-```
-**5. Install Git Support**
-
-Install Git to clone the EcoMotionZip repository from GitHub:
-```bash
-sudo apt install git
-```
-**6. Clone EcoMotionZip from GitHub**
-
-Clone the EcoMotionZip package to your local environment:
-```bash
-git clone https://github.com/yourusername/EcoMotionZip.git
+python run_headless.py --help
 ```
 
-### Tested Dependencies
-EcoMotionZip has been tested with the following versions of dependencies:
+---
 
-- Python: 3.11.2
-- Numpy: 1.24.2
-- opencv-python: 4.6.0
-- FFMPEG: version 5.1.4
-  
-Ensure that your system matches these versions for optimal performance. If you encounter any issues, refer to the troubleshooting section or consult the EcoMotionZip GitHub repository for additional support and updates.
+## Key Features
 
-> PyPi EcoMotionZip package coming soon!
+- **Motion-selective compression** — retains only frames containing movement; discards inactive segments
+- **Real-time capture and compression** — single-pass operation with Raspberry Pi camera (PiCamera2)
+- **Multiple output codecs** — X264, DIVX, FFV1, HEVC via FFmpeg
+- **Frame-level sidecar CSV** — maps every output frame back to the original source timestamp
+- **Optional JPEG snapshots** — extracts motion frames as images for AI/ML dataset creation
+- **Polytrack compatible** — output videos work directly with Polytrack for insect trajectory analysis
+- **Configurable detection** — tune sensitivity, downscale factor, dilation kernel, and post-motion buffering
+- **Background blending** — optionally preserve spatial context in non-motion regions
 
-## Usage
+---
 
-EcoMotionZip software can be used in both offline and real-time to process camera trap videos. We recommend processing videos in offline mode depending on the specification of your edge computing platform.
+## Configuration
 
-The processing parameters for EcoMotionZip can be set through `config.json` file or as commanline arguments. An example of `config.json` file and a complete set of parameters with description are presented below.
+All settings are stored in `config.json` in the project folder. The Desktop App lets you change these through its interface. For headless use, edit `config.json` directly or override individual values on the command line.
 
-Please follow the following steps to run the EcoMotionZip after clonning the repository.
+Key settings:
 
-1. Navigate to the cloned directory.
-   ```bash
-   cd EcoMotionZip
-   ```
+| Setting | Description | Default |
+|---|---|---|
+| `movement_threshold` | Pixel brightness change (0–255) needed to flag motion | 40 |
+| `downscale_factor` | How much to shrink frames before analysis (higher = faster) | 16 |
+| `video_codec` | Output codec: `X264`, `DIVX`, `FFV1`, `HEVC` | `X264` |
+| `background_transparency` | Opacity of non-motion regions (0.0 = black, 1.0 = full) | 0.0 |
+| `save_frames` | Also save motion frames as individual JPEG images | false |
+| `embed_timestamps` | Burn frame number/time into each output frame | false |
+| `delete_original_after_processing` | Remove source file after successful compression | false |
 
-2. Run EcoMotionZip software.
-   
-   ```bash
-   python EcomotionZip/arc.py
-   ```
-#### Example of the `config.json` file
+---
 
-```json
-{
-    "video_source": "/path/to/video/directory",
-    "output_directory": "/path/to/output/directory",
-    "record_duration": 60,
-    "number_of_videos": 1,
-    "camera_resolution": [1920,1080],
-    "camera_fps": 30,
-    "raspberrypi_camera": false,
-    "delete_original": false,
-    "reader_sleep_seconds": 1,
-    "reader_flush_proportion": 0.9,
-    "downscale_factor": 16,
-    "dilate_kernel_size": 128,
-    "movement_threshold": 40,
-    "persist_frames": 0,
-    "full_frame_guarantee": 300,
-    "video_codec": "X264",
-    "num_opencv_threads": 10
+## Project Structure
+
+```
+EcoMotionZip/
+├── run_desktop.py          ← Launch the desktop GUI
+├── run_headless.py         ← Run from command line / Raspberry Pi
+├── config.json             ← Default settings
+├── requirements.txt        ← Core dependencies (headless)
+├── requirements-gui.txt    ← Desktop GUI dependencies
+├── ecomotioinzip/
+│   ├── pipeline.py         ← Core compression engine
+│   └── app.py              ← Desktop GUI application
+└── docs/
+    ├── install-desktop.md
+    └── install-raspberry-pi.md
+```
+
+---
+
+## Cite As
+
+If you use EcoMotionZip in your research, please cite:
+
+```bibtex
+@article{ratnayake2026motion,
+  title={A Motion-Based Compression and Tracking System for Video Camera Trap-Based Insect Behaviour Studies},
+  author={Ratnayake, Malika Nisal and Gallon, Lex and Toosi, Adel N and Dorin, Alan},
+  journal={International Journal of Computer Vision},
+  volume={134},
+  number={5},
+  pages={220},
+  year={2026},
+  publisher={Springer}
 }
 ```
 
-### List of EcoMotionZip parameters and usage
-- `-h, --help`        
-  show this help message and exit
-
-- `--video_source VIDEO_SOURCE`     
-  Path to the input directory or a single video file. Set value to 0 to use webcam or any other integer to use a different camera.
-- `--output_directory OUTPUT_DIRECTORY`   
-  Path to the output directory
-- `--record_duration RECORD_DURATION`   
-  Duration of the recording for a single video in seconds.
-- `--number_of_videos NUMBER_OF_VIDEOS`   
-Number of videos to record.
-- `--camera_resolution CAMERA_RESOLUTION`   
-  Resolution of the camera.
-- `--camera_fps CAMERA_FPS`    
-  FPS of the camera.
-- `--delete_original DELETE_ORIGINAL`   
- Delete original video after processing.
--  `--downscale_factor DOWNSCALE_FACTOR`  
-   Downscale factor for input video.
-- `--dilate_kernel_size DILATE_KERNEL_SIZE`   
-Kernel size for dilation.
-- `--movement_threshold MOVEMENT_THRESHOLD`     
-Threshold for movement detection.
-- `--persist_frames PERSIST_FRAMES`      
-Number of frames to persist for.
-- `--full_frame_guarantee FULL_FRAME_GUARANTEE`        
-Number of frames to persist for.
-- `--video_codec {XVID,X264}`          
-Video codec to use for output video.
-- `--num_opencv_threads NUM_OPENCV_THREADS`     
-    Number of threads to use for OpenCV.
+---
 
 ## License
 
-EcoMotionZip is licensed under the [MIT License](LICENSE).
+EcoMotionZip is licensed under the [GPL-3.0 License](LICENSE).
 
 ## Contact
 
-If you have any questions, feel free to reach out to us at [email](mailto:malika.ratnayake@monash.edu).
+Questions or feedback: [malika.ratnayake@monash.edu](mailto:malika.ratnayake@monash.edu)
+or open an [issue on GitHub](https://github.com/malikaratnayake/EcoMotionZip/issues).
 
 ## References
 
-* [Bees-edge](https://github.com/byebrid/bees-edge) by [Lex Gallon](https://github.com/byebrid).
-* [Basic motion detection and tracking with Python and OpenCV](https://pyimagesearch.com/2015/05/25/basic-motion-detection-and-tracking-with-python-and-opencv/) by [pyimagesearch](https://pyimagesearch.com)
-* [Increasing webcam FPS with Python and OpenCV](https://pyimagesearch.com/2015/12/21/increasing-webcam-fps-with-python-and-opencv/) by [pyimagesearch](https://pyimagesearch.com)
-
-
-
-
+- [Bees-edge](https://github.com/byebrid/bees-edge) by [Lex Gallon](https://github.com/byebrid)
+- [Basic motion detection and tracking with Python and OpenCV](https://pyimagesearch.com/2015/05/25/basic-motion-detection-and-tracking-with-python-and-opencv/) — pyimagesearch
+- [Increasing webcam FPS with Python and OpenCV](https://pyimagesearch.com/2015/12/21/increasing-webcam-fps-with-python-and-opencv/) — pyimagesearch

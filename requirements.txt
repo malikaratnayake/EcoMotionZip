@@ -1,0 +1,12 @@
+# EcoMotionZip — core dependencies (headless / Raspberry Pi)
+# Install with:  pip install -r requirements.txt
+
+numpy>=1.24
+opencv-python>=4.8
+
+# Headless environments (no display, e.g. remote server):
+# Replace opencv-python above with:
+#   opencv-python-headless>=4.8
+
+# Raspberry Pi camera support — install via OS packages, not pip:
+#   sudo apt-get install -y python3-picamera2
