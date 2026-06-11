@@ -122,11 +122,15 @@ EcoMotionZip/
 If you use EcoMotionZip in your research, please cite:
 
 ```bibtex
-@article{ratnayake2024motion,
-  title   = {Motion-based video compression for resource-constrained camera traps},
-  author  = {Ratnayake, Malika Nisal and Gallon, Lex and Toosi, Adel N and Dorin, Alan},
-  journal = {arXiv preprint arXiv:2405.14419},
-  year    = {2024}
+@article{ratnayake2026motion,
+  title={A Motion-Based Compression and Tracking System for Video Camera Trap-Based Insect Behaviour Studies},
+  author={Ratnayake, Malika Nisal and Gallon, Lex and Toosi, Adel N and Dorin, Alan},
+  journal={International Journal of Computer Vision},
+  volume={134},
+  number={5},
+  pages={220},
+  year={2026},
+  publisher={Springer}
 }
 ```
 
