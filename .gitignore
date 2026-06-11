@@ -1,1 +1,35 @@
-./src/__pycache__/
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# PyInstaller
+*.spec
+
+# User-specific config overrides (personal paths)
+# Uncomment the line below to prevent your local config.json edits from being committed:
+# config.json

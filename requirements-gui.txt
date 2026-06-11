@@ -1,0 +1,5 @@
+# EcoMotionZip — Desktop GUI dependencies (Mac / Windows)
+# Install with:  pip install -r requirements-gui.txt
+
+-r requirements.txt
+PySide6>=6.5
