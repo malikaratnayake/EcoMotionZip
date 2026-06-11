@@ -4,6 +4,10 @@
 
 # EcoMotionZip
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://choosealicense.com/licenses/gpl-3.0/)
+[![DOI](https://img.shields.io/badge/DOI-10.1007%2Fs11263--026--02803--5-blue)](https://doi.org/10.1007/s11263-026-02803-5)
+[![Python package](https://img.shields.io/badge/Python-package-green.svg)](https://www.python.org/)
+[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Raspberry%20Pi-lightgrey.svg)]()
+
 
 EcoMotionZip is an open-source tool for **motion-based video compression** designed for wildlife camera traps and ecological monitoring. It analyses video footage and keeps only the parts where something is moving — dramatically reducing file sizes while preserving the moments that matter for research and analysis.
 
